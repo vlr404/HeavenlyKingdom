@@ -12,7 +12,7 @@ export const Events = () => {
             <Quote text="Валера лох." />
             <Calendar />
             <Space mt={100} />
-            <QuoteBlock title="ОНЛАЙН-ПОЖЕРТВОВАНИE" text="бла-бла-бла валера лох." backgr_img="./public/foto/Events.png" buttonText="Узнать больше" />
+            <QuoteBlock title="ОНЛАЙН-ПОЖЕРТВОВАНИE" text="бла-бла-бла валера лох." backgr_img="foto/Events.png" buttonText="Узнать больше" />
         </section>
     );
 };
