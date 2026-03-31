@@ -1,4 +1,4 @@
-import { Header } from '../components/common/Header/Header.tsx';
+// import { Header } from '../components/common/Header/Header.tsx';
 import { Hero } from '../widgets/Home/Hero/Hero.tsx';
 import { About } from '../widgets/Home/About/About.tsx';
 import { Events } from '../widgets/Home/Events/Events.tsx';
@@ -8,21 +8,18 @@ import { Contacts } from '../widgets/Home/Contacts/Contacts.tsx';
 
 
 
-function App() {
+export default function Home() {
     return (
 
-        <div className="App">
-            <Header />
+        <div className="">
+            {/* <Header /> */}
             <Hero />
             <About />
             <Father />
             <Events />
             <Ceremony />
             <Contacts />
-           
         </div>
-
-
     )
 }
-export default App
+

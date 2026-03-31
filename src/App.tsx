@@ -1,13 +1,19 @@
-import { Routes, Route } from 'react-router-dom'
-import Home from './pages/Home.tsx'
-// import Shop from './pages/Shop'
+import { Routes, Route, BrowserRouter as Router } from 'react-router-dom'
+import Home from './pages/Home'
+import Shop from './pages/Shop'
+import { Header } from './components/common/Header/Header'
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      {/* <Route path="/shop" element={<Shop />} /> */}
-    </Routes>
+    <Router basename="/HeavenlyKing">
+      <div className="App">
+        <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/shop" element={<Shop />} />
+      </Routes>
+      </div>
+    </Router>
   )
 }
 

@@ -7,7 +7,7 @@
 
     export const About = () => {
         return (
-            <section id="About" className="About">
+            <section id="about" className="About">
                 <Divider title = "О нас"/>
                 <Quote text="Пріидите ко Мнѣ вси труждающіися и обремененніи, и Азъ упокою вы: возмите иго Мое на себе и научитеся от Меня,яко кротокъ есмь и смиренъ сердцемъ: и обрящете покой душамъ вашимъ." />
                 <Benefits />

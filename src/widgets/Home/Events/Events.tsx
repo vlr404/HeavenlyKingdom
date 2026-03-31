@@ -7,7 +7,7 @@ import { Space } from '../../../components/common/Space/Space.js';
 
 export const Events = () => {
     return (
-        <section id="Events" className="Events">
+        <section id="events" className="Events">
             <Divider title="События" />
             <Quote text="Валера лох." />
             <Calendar />
