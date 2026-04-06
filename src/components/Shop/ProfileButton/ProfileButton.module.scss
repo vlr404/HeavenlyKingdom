@@ -1,0 +1,17 @@
+// ProfileButton.module.scss
+.profileBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #7c5cbf;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 50%;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #9b7de0;
+  }
+}
