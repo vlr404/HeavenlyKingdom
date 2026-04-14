@@ -1,0 +1,190 @@
+$accent: #EF6C00;
+$bg: #1a1a1a;
+$surface: #242424;
+$text: #e8e2d9;
+$muted: #7a7068;
+$border: rgba(239, 108, 0, 0.2);
+
+.page {
+  background: $bg;
+  min-height: 100vh;
+  padding: 40px 24px 80px;
+}
+
+.inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.backBtn {
+  background: none;
+  border: 1px solid $border;
+  border-radius: 6px;
+  color: $muted;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover { border-color: $accent; color: $accent; }
+}
+
+.title {
+  font-family: 'Arsenal', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: $text;
+}
+
+// Пустая корзина
+.empty {
+  text-align: center;
+  padding: 100px 20px;
+  color: $muted;
+}
+
+.emptyIcon { font-size: 64px; margin-bottom: 20px; display: block; }
+
+.emptyTitle {
+  font-family: 'Arsenal', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: $text;
+  margin-bottom: 8px;
+}
+
+.emptySub { font-size: 14px; margin-bottom: 28px; }
+
+.shopBtn {
+  padding: 12px 28px;
+  background: $accent;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(239, 108, 0, 0.3);
+  }
+}
+
+// Основной layout — два столбца
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: flex-start;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Список товаров
+.itemsList {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 20px 24px;
+}
+
+.listHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid $border;
+  font-size: 13px;
+  color: $muted;
+}
+
+.clearBtn {
+  background: none;
+  border: none;
+  color: $muted;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover { color: #e55; }
+}
+
+// Блок итога
+.summary {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 24px;
+  position: sticky;
+  top: 90px; // прилипает при скролле
+}
+
+.summaryTitle {
+  font-family: 'Arsenal', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: $text;
+  margin-bottom: 20px;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: $muted;
+  margin-bottom: 12px;
+}
+
+.free { color: #4caf50; font-weight: 600; }
+
+.summaryTotal {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  font-weight: 700;
+  color: $text;
+  padding-top: 16px;
+  border-top: 1px solid $border;
+  margin: 16px 0 20px;
+
+  span:last-child { color: $accent; }
+}
+
+.checkoutBtn {
+  width: 100%;
+  padding: 14px;
+  background: $accent;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(239, 108, 0, 0.3);
+  }
+}

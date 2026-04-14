@@ -93,3 +93,64 @@
     font-size: 20px;
     line-height: 20px;
 }
+
+
+.shop-tools {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.search-bar {
+    width: 200px;
+    height: 30px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 4px;
+}
+
+.shop-icons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.profile-btn, .cart-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: 30px;
+    border: none;
+    border-radius: 4px;
+    background-color: transparent;
+    color: white;
+    font-size: 16px;
+    padding: 0 5px;
+}
+
+.cart-btn:hover {
+    border-color: #ef6c00;
+}
+
+.badge {
+    position:absolute;
+    left: 30px;
+    top: 1px;
+    background: #EF6C00;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 50%;
+    min-width: 15px;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+   
+}
+        

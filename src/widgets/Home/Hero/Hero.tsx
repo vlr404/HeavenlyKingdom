@@ -45,7 +45,7 @@ export const Hero = () => {
     const activeEvent = getNextEvent(eventsBase);
 
     return (
-        <section id="Hero" className="hero section-npt">
+        <section id="hero" className="hero section-npt">
             <div className="section-container">
                 <div className="hero__preview">
                     <div className="hero__preview-title">
