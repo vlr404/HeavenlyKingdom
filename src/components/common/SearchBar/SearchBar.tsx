@@ -8,7 +8,7 @@ export interface Product {
   price: number;
   cat: string;
   img?: string;
-  description?: string;
+  isNew?: boolean;
 }
 
 // ====== Демо-товары ======
@@ -163,7 +163,7 @@ export default function SearchBar({
 
                     {/* Цена */}
                     <p className={styles.itemPrice}>
-                      {product.price.toLocaleString("ru-RU")} ₽
+                      {product.price.toLocaleString("ro-MD")} MDL
                     </p>
                   </li>
                 ))}

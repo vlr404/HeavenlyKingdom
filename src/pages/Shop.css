@@ -1,0 +1,75 @@
+.shop {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* ── Header ──────────────────────────────────────── */
+.shop__header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.shop__title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.shop__count {
+  font-size: 14px;
+  color: #888;
+}
+
+/* ── Filters ─────────────────────────────────────── */
+.shop__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.shop__filter-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #333;
+  background: transparent;
+  color: #aaa;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.shop__filter-btn:hover {
+  border-color: #666;
+  color: #fff;
+}
+
+.shop__filter-btn--active {
+  background: #c8f55a;
+  border-color: #c8f55a;
+  color: #111;
+  font-weight: 600;
+}
+
+/* ── Grid ────────────────────────────────────────── */
+.shop__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+/* ── Responsive ──────────────────────────────────── */
+@media (max-width: 600px) {
+  .shop__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .shop {
+    padding: 24px 16px;
+  }
+}
