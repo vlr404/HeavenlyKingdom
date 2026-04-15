@@ -1,0 +1,276 @@
+// SearchBar.module.scss
+
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&display=swap");
+
+.wrapper {
+  font-family: "Manrope", sans-serif;
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+}
+
+// ───────────────────────────────
+// Поле ввода
+// ───────────────────────────────
+.field {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  height: 52px;
+  padding: 0 1rem;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.2s, box-shadow 0.2s, border-radius 0.2s;
+
+  &:focus-within {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+  }
+}
+
+// Если открыт дропдаун — скругляем только верх
+.fieldOpen {
+  border-radius: 14px 14px 0 0;
+  border-bottom-color: #f1f5f9;
+  box-shadow: none;
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  color: #94a3b8;
+  flex-shrink: 0;
+  transition: color 0.2s;
+
+  .field:focus-within & {
+    color: #6366f1;
+  }
+}
+
+.input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1e293b;
+
+  &::placeholder {
+    color: #cbd5e1;
+    font-weight: 400;
+  }
+}
+
+.clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: #f1f5f9;
+  border-radius: 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, transform 0.15s;
+
+  &:hover {
+    background: #e2e8f0;
+    transform: scale(1.05);
+  }
+
+  svg {
+    width: 13px;
+    height: 13px;
+    color: #64748b;
+  }
+}
+
+// ───────────────────────────────
+// Дропдаун
+// ───────────────────────────────
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 1.5px solid #6366f1;
+  border-top: 1px solid #f1f5f9;
+  border-radius: 0 0 14px 14px;
+  box-shadow: 0 8px 28px rgba(99, 102, 241, 0.12);
+  overflow: hidden;
+  z-index: 200;
+  animation: dropIn 0.16s ease;
+}
+
+@keyframes dropIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.count {
+  margin: 0;
+  padding: 0.6rem 1rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid #f1f5f9;
+
+  span {
+    color: #6366f1;
+  }
+}
+
+// ───────────────────────────────
+// Список товаров
+// ───────────────────────────────
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0.4rem 0;
+  max-height: 340px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 4px;
+  }
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  transition: background 0.12s;
+
+  &:hover {
+    background: #f8faff;
+  }
+}
+
+// Превью товара
+.itemThumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  font-size: 1.3rem;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// Название и категория
+.itemInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.itemName {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemCategory {
+  margin: 2px 0 0;
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+// Цена
+.itemPrice {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #6366f1;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+// ───────────────────────────────
+// Подсветка совпадения
+// ───────────────────────────────
+.highlight {
+  background: #eef2ff;
+  color: #4f46e5;
+  border-radius: 3px;
+  padding: 0 1px;
+  font-weight: 700;
+  font-style: normal;
+}
+
+// ───────────────────────────────
+// Пустое состояние
+// ───────────────────────────────
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.75rem 1rem;
+  color: #94a3b8;
+
+  span {
+    font-size: 1.8rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: center;
+  }
+}
+
+// ───────────────────────────────
+// Адаптивность
+// ───────────────────────────────
+@media (max-width: 600px) {
+  .wrapper {
+    max-width: 100%;
+  }
+
+  .field {
+    height: 46px;
+  }
+
+  .itemThumb {
+    width: 38px;
+    height: 38px;
+  }
+}

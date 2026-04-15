@@ -9,6 +9,7 @@
     height: 70px;
     background-color: #10101095;
     z-index: 1000;
+    overflow: visible;
 }
 
 .header__wrapper {
@@ -17,6 +18,7 @@
     justify-content: space-between;
     width: 100%;
     max-width: 1300px;
+    overflow: visible;
 }
 
 .header__nav ul {
