@@ -1,5 +1,6 @@
 ﻿import './Header.css';
 import { Link, useLocation } from "react-router-dom";
+import SearchBar from "../../components/common/SearchBar/SearchBar";
 
 
 export const Header = () => {
@@ -17,15 +18,6 @@ export const Header = () => {
                 {!isShop && (
                 <nav className="header__nav">
                     <ul>
-<<<<<<< Updated upstream:src/widgets/Header/Header.tsx
-                        <li><a href="#Home">ГЛАВНАЯ</a></li>
-                        <li><a href="#About">О НАС</a></li>
-                        <li><a href="#Father">ОТЦЫ</a></li>
-                        <li><a href="#Events">СОБЫТИЯ</a></li>
-                        <li><a href="#Ceremony">ЦЕРЕМОНИИ</a></li>
-                        <li><a href="#Contacts">КОНТАКТЫ</a></li>
-                        <li><a href="#Shop">МАГАЗИН</a></li>
-=======
                         <li><a href="#hero">ГЛАВНАЯ</a></li>
                         <li><a href="#about">О НАС</a></li>
                         <li><a href="#fathers">ОТЦЫ</a></li>
@@ -33,14 +25,13 @@ export const Header = () => {
                         <li><a href="#ceremony">ЦЕРЕМОНИИ</a></li>
                         <li><a href="#contacts">КОНТАКТЫ</a></li>
                         <li><Link to="/shop" className="shop-link">МАГАЗИН</Link></li>
->>>>>>> Stashed changes:src/components/common/Header/Header.tsx
                     </ul>
                 </nav>
             )}
 
             {isShop && (
                <div className="shop-tools">
-              <input type="text" placeholder="Поиск..." className="search-bar" />
+              <SearchBar placeholder="Поиск товаров..." />
               <div className="shop-icons">
                 <button className="profile-btn">👤</button>
                 <button className="cart-btn">🛒</button>
