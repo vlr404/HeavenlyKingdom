@@ -1,4 +1,4 @@
-import type { Product } from "../components/common/SearchBar/SearchBar";
+import type { Product } from '../types';
 
 export const SHOP_PRODUCTS: Product[] = [
   { id: 1, name: "Библия в кожаном переплёте", price: 1290, cat: "Книги", img: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&h=400&fit=crop" },

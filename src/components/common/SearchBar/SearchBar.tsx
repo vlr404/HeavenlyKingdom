@@ -1,47 +1,38 @@
-import { useState } from "react";
-import { SHOP_PRODUCTS } from "../../../data/shopData";
-import styles from "./SearchBar.module.scss";
-
-// ====== Тип товара ======
-export interface Product {
-  id: number;
-  name: string;
-  price: number;
-  cat: string;
-  img?: string;
-  isNew?: boolean;
-}
+import { useState } from 'react';
+import { SHOP_PRODUCTS } from '../../../data/shopData';
+import type { Product } from '../../../types';
+import styles from './SearchBar.module.scss';
 
 interface SearchBarProps {
   products?: Product[];
-  onResults?: (results: Product[]) => void;
+  onResults?: (results: Product[] | null) => void;
   placeholder?: string;
 }
 
 export default function SearchBar({
   products = SHOP_PRODUCTS,
   onResults,
-  placeholder = "Поиск товаров...",
+  placeholder = 'Поиск товаров...',
 }: SearchBarProps) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
 
-  const filterProducts = (q: string) =>
-    products.filter((p) => {
-      const lower = q.toLowerCase();
-      return (
+  const filterProducts = (q: string) => {
+    const lower = q.toLowerCase();
+    return products.filter(
+      (p) =>
         p.name.toLowerCase().includes(lower) ||
-        p.cat.toLowerCase().includes(lower)
-      );
-    });
+        p.cat.toLowerCase().includes(lower),
+    );
+  };
 
   const handleChange = (value: string) => {
     setQuery(value);
-    onResults?.(value ? filterProducts(value) : products);
+    onResults?.(value ? filterProducts(value) : null);
   };
 
   const handleClear = () => {
-    setQuery("");
-    onResults?.(products);
+    setQuery('');
+    onResults?.(null);
   };
 
   return (

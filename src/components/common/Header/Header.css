@@ -7,7 +7,9 @@
     justify-content: center;
     width: 100%;
     height: 70px;
-    background-color: #10101095;
+    background-color: rgba(16, 16, 16, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     z-index: 1000;
     overflow: visible;
 }

@@ -1,5 +1,5 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
-import type { Product } from "../components/common/SearchBar/SearchBar";
+import { createContext, useContext, useState, type ReactNode } from 'react';
+import type { Product } from '../types';
 
 interface SearchContextType {
   results: Product[] | null;
