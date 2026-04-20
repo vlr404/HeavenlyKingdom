@@ -9,10 +9,10 @@ export const Events = () => {
     return (
         <section id="events" className="Events">
             <Divider title="События" />
-            <Quote text="Валера лох." />
+            <Quote text="Присоединяйтесь к нашим богослужениям и церковным событиям." />
             <Calendar />
             <Space mt={100} />
-            <QuoteBlock title="ОНЛАЙН-ПОЖЕРТВОВАНИE" text="бла-бла-бла валера лох." backgr_img="foto/Events.png" buttonText="Узнать больше" />
+            <QuoteBlock title="ОНЛАЙН-ПОЖЕРТВОВАНИE" text="Ваша помощь помогает нам совершать добрые дела и поддерживать приход." backgr_img="foto/Events.png" buttonText="Узнать больше" />
         </section>
     );
 };

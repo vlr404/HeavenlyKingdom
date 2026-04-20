@@ -62,6 +62,14 @@
   gap: 24px;
 }
 
+/* ── Empty state ─────────────────────────────────── */
+.shop__empty {
+  text-align: center;
+  padding: 80px 20px;
+  color: #888;
+  font-size: 15px;
+}
+
 /* ── Responsive ──────────────────────────────────── */
 @media (max-width: 600px) {
   .shop__grid {
