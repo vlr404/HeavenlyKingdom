@@ -1,23 +1,14 @@
-import React, { useState } from "react";
-import "./ProductCard.css";
-import { useCartStore } from "../../entity/cart/cartStore";
+import { useState } from 'react';
+import './ProductCard.css';
+import type { Product } from '../../types';
+import { useCartStore } from '../../entity/cart/cartStore';
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  cat: string;
-  img: string;
-  isNew: boolean;
-}
-
-interface ProductCardProps {
+interface Props {
   product: Product;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard = ({ product }: Props) => {
   const { name, price, cat, img, isNew } = product;
-
   const { addItem } = useCartStore();
 
   const [liked, setLiked] = useState(false);
@@ -35,8 +26,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         {isNew && <span className="pc-badge">New</span>}
         <img src={img} alt={name} className="pc-image" />
         <button
-          className={`pc-like ${liked ? "pc-like--active" : ""}`}
-          onClick={() => setLiked(!liked)}
+          className={`pc-like${liked ? ' pc-like--active' : ''}`}
+          onClick={() => setLiked((v) => !v)}
           aria-label="В избранное"
         >
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -44,7 +35,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               d="M12 21C12 21 3 14.5 3 8.5C3 6 5 4 7.5 4C9.24 4 10.91 5.01 12 6.09C13.09 5.01 14.76 4 16.5 4C19 4 21 6 21 8.5C21 14.5 12 21 12 21Z"
               stroke="currentColor"
               strokeWidth="1.8"
-              fill={liked ? "currentColor" : "none"}
+              fill={liked ? 'currentColor' : 'none'}
             />
           </svg>
         </button>
@@ -55,11 +46,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <p className="pc-name">{name}</p>
         <div className="pc-footer">
           <span className="pc-price">
-            {price.toLocaleString("ro-MD")}&thinsp;MDL
+            {price.toLocaleString('ro-MD')}&thinsp;MDL
           </span>
           <button
-            className={`pc-add ${added ? "pc-add--done" : ""}`}
+            className={`pc-add${added ? ' pc-add--done' : ''}`}
             onClick={handleAdd}
+            aria-label="Добавить в корзину"
           >
             {added ? (
               <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -2,36 +2,38 @@
 
 /* ── Card ────────────────────────────────────────── */
 .pc-card {
-  --bg: #ffffff;
-  --surface: #f5f4f0;
-  --accent: #c8f55a;
-  --accent-dark: #a8d83e;
-  --text-primary: #111111;
-  --text-muted: #888888;
-  --radius: 20px;
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --bg:           #1e1e1e;
+  --surface:      #2a2a2a;
+  --accent:       #EF6C00;
+  --accent-hover: #FF8C00;
+  --text:         #f0ebe4;
+  --text-muted:   #7a7068;
+  --radius:       var(--radius-lg, 12px);
 
   font-family: "Mulish", sans-serif;
   background: var(--bg);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  width: 280px;
+  border: 1px solid rgba(239, 108, 0, 0.15);
   overflow: hidden;
+  position: relative;
+  z-index: 1;
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.3s ease;
+              box-shadow 0.3s ease,
+              border-color 0.3s ease;
   cursor: pointer;
 }
 
 .pc-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.13);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(239, 108, 0, 0.3);
+  border-color: rgba(239, 108, 0, 0.4);
 }
 
 /* ── Image area ──────────────────────────────────── */
 .pc-image-wrap {
   position: relative;
   background: var(--surface);
-  height: 260px;
+  height: 220px;
   overflow: hidden;
 }
 
@@ -44,56 +46,56 @@
 }
 
 .pc-card:hover .pc-image {
-  transform: scale(1.05);
+  transform: scale(1.06);
 }
 
 /* ── Badge ───────────────────────────────────────── */
 .pc-badge {
   position: absolute;
-  top: 14px;
-  left: 14px;
+  top: 12px;
+  left: 12px;
   z-index: 2;
   background: var(--accent);
-  color: var(--text-primary);
+  color: #fff;
   font-family: "Unbounded", sans-serif;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 5px 10px;
-  border-radius: 8px;
+  padding: 4px 9px;
+  border-radius: 6px;
 }
 
 /* ── Like button ─────────────────────────────────── */
 .pc-like {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 10px;
+  right: 10px;
   z-index: 2;
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #bbb;
+  color: #666;
   transition: color 0.2s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-    background 0.2s;
+              background 0.2s;
 }
 
 .pc-like svg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
 }
 
 .pc-like:hover {
   transform: scale(1.15);
   color: #e05555;
-  background: #fff;
+  background: rgba(0, 0, 0, 0.75);
 }
 
 .pc-like--active {
@@ -102,18 +104,19 @@
 
 /* ── Body ────────────────────────────────────────── */
 .pc-body {
-  padding: 16px 18px 18px;
+  padding: 14px 14px 16px;
 }
 
 /* ── Category ────────────────────────────────────── */
 .pc-cat {
   display: inline-block;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 4px;
+  color: var(--accent);
+  margin-bottom: 6px;
+  opacity: 0.85;
 }
 
 /* ── Name ────────────────────────────────────────── */
@@ -121,9 +124,9 @@
   font-family: "Mulish", sans-serif;
   font-size: 15px;
   font-weight: 600;
-  color: var(--text-primary);
-  margin: 0 0 14px;
-  line-height: 1.4;
+  color: var(--text);
+  margin: 0 0 16px;
+  line-height: 1.45;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -141,37 +144,39 @@
 /* ── Price ───────────────────────────────────────── */
 .pc-price {
   font-family: "Unbounded", sans-serif;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-  color: var(--text-primary);
-  letter-spacing: -0.02em;
+  color: var(--text);
+  letter-spacing: -0.01em;
 }
 
 /* ── Add button ──────────────────────────────────── */
 .pc-add {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   border: none;
   background: var(--accent);
-  color: var(--text-primary);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
   transition: background 0.2s,
-    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+              transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.2s;
 }
 
 .pc-add svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
 
 .pc-add:hover {
-  background: var(--accent-dark);
+  background: var(--accent-hover);
   transform: scale(1.08);
+  box-shadow: 0 4px 14px rgba(239, 108, 0, 0.45);
 }
 
 .pc-add:active {
@@ -179,6 +184,7 @@
 }
 
 .pc-add--done {
-  background: #111;
+  background: #2a2a2a;
   color: var(--accent);
+  border: 1px solid rgba(239, 108, 0, 0.4);
 }
