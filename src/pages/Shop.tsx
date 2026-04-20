@@ -1,32 +1,29 @@
-import { useState, useEffect } from "react";
-import ProductCard from "../components/ProductCard/ProductCard";
-import { useSearch } from "../context/SearchContext";
-import { SHOP_PRODUCTS } from "../data/shopData";
-import "./Shop.css";
+import { useState, useEffect } from 'react';
+import ProductCard from '../components/ProductCard/ProductCard';
+import { useSearch } from '../context/SearchContext';
+import { SHOP_PRODUCTS } from '../data/shopData';
+import './Shop.css';
 
-const categories = ["Все", ...Array.from(new Set(SHOP_PRODUCTS.map((p) => p.cat)))];
-
-const toCardProduct = (p: (typeof SHOP_PRODUCTS)[0]) => ({ ...p, isNew: false, img: p.img ?? "" });
+const categories = ['Все', ...Array.from(new Set(SHOP_PRODUCTS.map((p) => p.cat)))];
 
 export default function Shop() {
   const { results, setResults } = useSearch();
-  const [activeCategory, setActiveCategory] = useState("Все");
+  const [activeCategory, setActiveCategory] = useState('Все');
 
-  // При входе на страницу — сбрасываем поиск
   useEffect(() => {
     setResults(null);
-  }, []);
+  }, [setResults]);
 
   const isSearching = results !== null;
   const displayed = isSearching
     ? results
-    : activeCategory === "Все"
-    ? SHOP_PRODUCTS
-    : SHOP_PRODUCTS.filter((p) => p.cat === activeCategory);
+    : activeCategory === 'Все'
+      ? SHOP_PRODUCTS
+      : SHOP_PRODUCTS.filter((p) => p.cat === activeCategory);
 
   const handleCategory = (cat: string) => {
     setActiveCategory(cat);
-    setResults(null); // сбрасываем поиск при смене категории
+    setResults(null);
   };
 
   return (
@@ -40,7 +37,7 @@ export default function Shop() {
         {categories.map((cat) => (
           <button
             key={cat}
-            className={`shop__filter-btn ${!isSearching && activeCategory === cat ? "shop__filter-btn--active" : ""}`}
+            className={`shop__filter-btn${!isSearching && activeCategory === cat ? ' shop__filter-btn--active' : ''}`}
             onClick={() => handleCategory(cat)}
           >
             {cat}
@@ -51,7 +48,7 @@ export default function Shop() {
       {displayed.length > 0 ? (
         <div className="shop__grid">
           {displayed.map((product) => (
-            <ProductCard key={product.id} product={toCardProduct(product)} />
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       ) : (
