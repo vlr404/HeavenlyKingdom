@@ -1,51 +1,57 @@
-// SearchBar.module.scss
-
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&display=swap");
+
+$accent:       #EF6C00;
+$accent-glow:  rgba(239, 108, 0, 0.18);
+$bg:           rgba(255, 255, 255, 0.06);
+$bg-hover:     rgba(255, 255, 255, 0.09);
+$border:       rgba(255, 255, 255, 0.1);
+$border-focus: rgba(239, 108, 0, 0.6);
+$text:         #f0ebe4;
+$text-muted:   #7a7068;
+$dropdown-bg:  #1e1e1e;
+$item-hover:   rgba(239, 108, 0, 0.07);
 
 .wrapper {
   font-family: "Manrope", sans-serif;
   position: relative;
   width: 100%;
-  max-width: 560px;
+  max-width: 420px;
 }
 
-// ───────────────────────────────
-// Поле ввода
-// ───────────────────────────────
+// ── Input field ──────────────────────────────
 .field {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  height: 52px;
-  padding: 0 1rem;
-  background: #ffffff;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 14px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  transition: border-color 0.2s, box-shadow 0.2s, border-radius 0.2s;
+  gap: 0.6rem;
+  height: 40px;
+  padding: 0 12px;
+  background: $bg;
+  border: 1.5px solid $border;
+  border-radius: 10px;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 
   &:focus-within {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+    border-color: $border-focus;
+    box-shadow: 0 0 0 3px $accent-glow;
+    background: $bg-hover;
   }
 }
 
-// Если открыт дропдаун — скругляем только верх
 .fieldOpen {
-  border-radius: 14px 14px 0 0;
-  border-bottom-color: #f1f5f9;
+  border-radius: 10px 10px 0 0;
+  border-bottom-color: rgba(255, 255, 255, 0.05);
   box-shadow: none;
 }
 
 .icon {
-  width: 18px;
-  height: 18px;
-  color: #94a3b8;
+  width: 16px;
+  height: 16px;
+  color: $text-muted;
   flex-shrink: 0;
   transition: color 0.2s;
 
   .field:focus-within & {
-    color: #6366f1;
+    color: $accent;
   }
 }
 
@@ -55,12 +61,12 @@
   outline: none;
   background: transparent;
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: 0.875rem;
   font-weight: 500;
-  color: #1e293b;
+  color: $text;
 
   &::placeholder {
-    color: #cbd5e1;
+    color: $text-muted;
     font-weight: 400;
   }
 }
@@ -69,89 +75,73 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border: none;
-  background: #f1f5f9;
-  border-radius: 8px;
+  background: rgba(239, 108, 0, 0.15);
+  border-radius: 6px;
   cursor: pointer;
   flex-shrink: 0;
   transition: background 0.15s, transform 0.15s;
 
   &:hover {
-    background: #e2e8f0;
+    background: rgba(239, 108, 0, 0.28);
     transform: scale(1.05);
   }
 
   svg {
-    width: 13px;
-    height: 13px;
-    color: #64748b;
+    width: 12px;
+    height: 12px;
+    color: $accent;
   }
 }
 
-// ───────────────────────────────
-// Дропдаун
-// ───────────────────────────────
+// ── Dropdown ─────────────────────────────────
 .dropdown {
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
-  background: #ffffff;
-  border: 1.5px solid #6366f1;
-  border-top: 1px solid #f1f5f9;
-  border-radius: 0 0 14px 14px;
-  box-shadow: 0 8px 28px rgba(99, 102, 241, 0.12);
+  background: $dropdown-bg;
+  border: 1.5px solid rgba(239, 108, 0, 0.4);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
   overflow: hidden;
   z-index: 200;
   animation: dropIn 0.16s ease;
 }
 
 @keyframes dropIn {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .count {
   margin: 0;
-  padding: 0.6rem 1rem;
-  font-size: 0.72rem;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  color: #94a3b8;
+  color: $text-muted;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  border-bottom: 1px solid #f1f5f9;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 
-  span {
-    color: #6366f1;
-  }
+  span { color: $accent; }
 }
 
-// ───────────────────────────────
-// Список товаров
-// ───────────────────────────────
+// ── Results list ─────────────────────────────
 .list {
   list-style: none;
   margin: 0;
-  padding: 0.4rem 0;
-  max-height: 340px;
+  padding: 4px 0;
+  max-height: 320px;
   overflow-y: auto;
 
-  &::-webkit-scrollbar {
-    width: 4px;
-  }
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
   &::-webkit-scrollbar-thumb {
-    background: #e2e8f0;
+    background: rgba(239, 108, 0, 0.3);
     border-radius: 4px;
   }
 }
@@ -159,37 +149,29 @@
 .item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.6rem 1rem;
+  gap: 0.7rem;
+  padding: 0.55rem 0.875rem;
   cursor: pointer;
   transition: background 0.12s;
 
-  &:hover {
-    background: #f8faff;
-  }
+  &:hover { background: $item-hover; }
 }
 
-// Превью товара
 .itemThumb {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  background: #f1f5f9;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: #2a2a2a;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   overflow: hidden;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  img { width: 100%; height: 100%; object-fit: cover; }
 }
 
-// Название и категория
 .itemInfo {
   flex: 1;
   min-width: 0;
@@ -197,9 +179,9 @@
 
 .itemName {
   margin: 0;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  color: #1e293b;
+  color: $text;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -207,70 +189,52 @@
 
 .itemCategory {
   margin: 2px 0 0;
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   font-weight: 500;
-  color: #94a3b8;
+  color: $text-muted;
 }
 
-// Цена
 .itemPrice {
   margin: 0;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   font-weight: 700;
-  color: #6366f1;
+  color: $accent;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
-// ───────────────────────────────
-// Подсветка совпадения
-// ───────────────────────────────
+// ── Highlight ────────────────────────────────
 .highlight {
-  background: #eef2ff;
-  color: #4f46e5;
+  background: rgba(239, 108, 0, 0.2);
+  color: #FF8C00;
   border-radius: 3px;
   padding: 0 1px;
   font-weight: 700;
   font-style: normal;
 }
 
-// ───────────────────────────────
-// Пустое состояние
-// ───────────────────────────────
+// ── Empty state ──────────────────────────────
 .empty {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  padding: 1.75rem 1rem;
-  color: #94a3b8;
+  gap: 0.4rem;
+  padding: 1.5rem 1rem;
+  color: $text-muted;
 
-  span {
-    font-size: 1.8rem;
-  }
+  span { font-size: 1.6rem; }
 
   p {
     margin: 0;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     font-weight: 500;
     text-align: center;
   }
 }
 
-// ───────────────────────────────
-// Адаптивность
-// ───────────────────────────────
+// ── Responsive ───────────────────────────────
 @media (max-width: 600px) {
-  .wrapper {
-    max-width: 100%;
-  }
-
-  .field {
-    height: 46px;
-  }
-
-  .itemThumb {
-    width: 38px;
-    height: 38px;
-  }
+  .wrapper { max-width: 100%; }
+  .field { height: 40px; }
+  .itemThumb { width: 36px; height: 36px; }
 }

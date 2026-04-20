@@ -1,14 +1,14 @@
 $accent: #EF6C00;
 $text: #e8e2d9;
 $muted: #7a7068;
-$border: rgba(239, 108, 0, 0.2);
+$border: rgba(239, 108, 0, 0.35);
 
 .item {
   display: flex;
   align-items: center;
   gap: 16px;
   padding: 16px 0;
-  border-bottom: 1px solid $border;
+  border-bottom: 2px solid $border;
 
   &:last-child {
     border-bottom: none;
