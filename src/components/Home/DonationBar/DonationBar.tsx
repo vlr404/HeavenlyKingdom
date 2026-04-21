@@ -1,43 +1,61 @@
-import './DonationBar.css';
-import { Button } from '../Button/Button';
-import { Quote } from '../Quote/Quote';
+import { useState } from 'react';
+import styles from './DonationBar.module.css';
 
-type DonationBarProps = {
-    current: number;
-    goal: number;
-    title: string;
-    text: string;
-    valute: string;
-};
+interface DonationBarProps {
+  goal?:     number;
+  currency?: string;
+}
 
-export const DonationBar = ({ current, goal, title, text, valute }: DonationBarProps) => {
-    const progressPercent = Math.min((current / goal) * 100, 100);
+export const DonationBar = ({ goal = 1000, currency = 'MDL' }: DonationBarProps) => {
+  const [raised, setRaised]               = useState<number>(0);
+  const [inputValue, setInputValue]       = useState<string>('');
+  const [errorMsg, setErrorMsg]           = useState<string | null>(null);
+  const [isGoalReached, setIsGoalReached] = useState<boolean>(false);
 
-    return (
-        <div className="donates">
-            <div className="donation-wrapper">
-                <h1 className="donation-title">{title}</h1>
-                <Quote text={text} mb="no" />
+  const progressPercent = Math.min((raised / goal) * 100, 100);
 
-                <div className="donates-scale">
-                    <div className="donates-scale__goal">
-                        <p className="donates-scale__goal__text">НАША ЦЕЛЬ:</p>
-                        <p className="donates-scale__goal__sum">{goal.toLocaleString()} {valute}</p>
-                    </div>
+  const handleDonate = () => {
+    const value = Number(inputValue);
+    if (!inputValue || isNaN(value)) { setErrorMsg('Введи сумму'); return; }
+    if (value <= 0)                  { setErrorMsg('Сумма должна быть > 0'); return; }
+    const newRaised = Math.min(raised + value, goal);
+    setRaised(newRaised);
+    setInputValue('');
+    setErrorMsg(null);
+    if (newRaised >= goal) setIsGoalReached(true);
+  };
 
-                    <div className="donation-bar-container">
-                        <div
-                            className="donation-progress-fill"
-                            style={{ width: `${progressPercent}%` }}
-                        />
-                        <div className="donation-text-overlay">
-                            {current.toLocaleString()}
-                        </div>
-                    </div>
+  return (
+    <div className={styles.wrapper}>
+      <div className={styles.inner}>
+        <h3>Пожертвования</h3>
 
-                    <Button title="Пожертвовать" variant="lg" />
-                </div>
-            </div>
+        <div className={styles.track}>
+          <div className={styles.fill} style={{ width: `${progressPercent}%` }} />
         </div>
-    );
+
+        <p className={styles.amount}>
+          <strong>{raised}</strong> / {goal} {currency}
+        </p>
+
+        {isGoalReached && (
+          <p className={styles.success}>Цель достигнута! 🎉</p>
+        )}
+
+        {!isGoalReached && (
+          <div className={styles.form}>
+            <input
+              type="number"
+              min={1}
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder={`Сумма (${currency})`}
+            />
+            {errorMsg && <span className={styles.error}>{errorMsg}</span>}
+            <button onClick={handleDonate}>Пожертвовать</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };

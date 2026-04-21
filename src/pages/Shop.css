@@ -1,0 +1,251 @@
+.shop {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 48px 24px;
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+/* ── Sidebar ─────────────────────────────────── */
+.shop__sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 88px;
+}
+
+.shop__sidebar-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #666;
+  margin: 0 0 12px 8px;
+}
+
+.shop__cat-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.shop__cat-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: #aaa;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.18s, color 0.18s;
+}
+
+.shop__cat-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.shop__cat-btn--active {
+  background: #EF6C00;
+  color: #111;
+  font-weight: 600;
+}
+
+.shop__cat-btn--active:hover {
+  background: #EF6C00;
+  color: #111;
+}
+
+.shop__cat-icon {
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* ── Main area ────────────────────────────────── */
+.shop__main {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── Toolbar ─────────────────────────────────── */
+.shop__toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+  position: sticky;
+  top: 70px;
+  z-index: 200;
+  background: #181818;
+  padding: 12px 0;
+  margin-top: -12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ── Sort ────────────────────────────────────── */
+.shop__sort-wrap {
+  position: relative;
+}
+
+.shop__sort-btn {
+  padding: 9px 16px;
+  border-radius: 10px;
+  border: 1px solid #333;
+  background: transparent;
+  color: #ccc;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.18s, color 0.18s;
+}
+
+.shop__sort-btn:hover {
+  border-color: #EF6C00;
+  color: #fff;
+}
+
+.shop__sort-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 100;
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  background: #242424;
+  border: 1px solid #333;
+  border-radius: 10px;
+  min-width: 210px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.shop__sort-option {
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: #bbb;
+  font-size: 13px;
+  text-align: left;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.shop__sort-option:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+}
+
+.shop__sort-option--active {
+  color: #EF6C00;
+  font-weight: 600;
+}
+
+/* ── Price filter ────────────────────────────── */
+.shop__price-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shop__price-label {
+  font-size: 13px;
+  color: #666;
+  white-space: nowrap;
+}
+
+.shop__price-input {
+  width: 88px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: transparent;
+  color: #fff;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.18s;
+}
+
+.shop__price-input:focus {
+  border-color: #EF6C00;
+}
+
+.shop__price-input::placeholder {
+  color: #555;
+}
+
+.shop__price-sep {
+  color: #555;
+  font-size: 14px;
+}
+
+/* ── Count ───────────────────────────────────── */
+.shop__count {
+  font-size: 13px;
+  color: #666;
+  margin-left: auto;
+}
+
+/* ── Grid ────────────────────────────────────── */
+.shop__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+/* ── Empty state ─────────────────────────────── */
+.shop__empty {
+  text-align: center;
+  padding: 80px 20px;
+  color: #888;
+  font-size: 15px;
+}
+
+/* ── Responsive ──────────────────────────────── */
+@media (max-width: 860px) {
+  .shop {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .shop__sidebar {
+    width: 100%;
+    position: static;
+  }
+
+  .shop__cat-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .shop__cat-btn {
+    width: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .shop {
+    padding: 24px 16px;
+  }
+
+  .shop__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .shop__price-filter {
+    flex-wrap: wrap;
+  }
+}

@@ -1,13 +1,9 @@
 import styles from './ProfileButton.module.scss';
-import { useNavigate } from 'react-router-dom';
 
-const ProfileButton: React.FC = () => {
-//   const navigate = useNavigate();
-
+const ProfileButton = () => {
   return (
     <button
       className={styles.profileBtn}
-    //   onClick={() => navigate('/profile')}
       aria-label="Профиль"
     >
       <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
