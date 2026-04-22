@@ -1,3 +1,14 @@
+:root {
+  --header-height: 70px;
+  --color-bg: #1a1a1a;
+  --color-surface: #242424;
+  --color-accent: #EF6C00;
+  --color-accent-hover: #d45f00;
+  --color-text: #e8e2d9;
+  --color-muted: #7a7068;
+  --color-border: rgba(239, 108, 0, 0.2);
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
