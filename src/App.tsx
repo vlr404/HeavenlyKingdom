@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Shop from './pages/Shop'
 import { Header } from './components/common/Header/Header'
 import Cart from './pages/Cart'
+import AdminPage from './pages/Admin/AdminPage'
 import { SearchProvider } from './context/SearchContext'
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/admin" element={<AdminPage />} />
           </Routes>
         </div>
       </SearchProvider>
