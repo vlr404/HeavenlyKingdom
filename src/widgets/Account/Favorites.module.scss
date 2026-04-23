@@ -1,0 +1,187 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.title {
+  font-family: 'Arsenal', serif;
+  font-size: 22px;
+  color: #e8e2d9;
+}
+
+.count {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  color: #7a7068;
+  margin-top: -8px;
+}
+
+.empty {
+  background: #242424;
+  border: 1px solid rgba(239, 108, 0, 0.2);
+  border-radius: 8px;
+  padding: 60px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.emptyIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(239, 108, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ef6c00;
+  font-size: 24px;
+}
+
+.emptyText {
+  font-family: 'Arsenal', serif;
+  font-size: 18px;
+  color: #e8e2d9;
+}
+
+.emptyHint {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  color: #7a7068;
+  text-align: center;
+}
+
+.catalogBtn {
+  margin-top: 8px;
+  padding: 11px 24px;
+  background: #ef6c00;
+  border-radius: 4px;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s, transform 0.1s;
+
+  &:hover {
+    background: #d45f00;
+    transform: translateY(-1px);
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: #242424;
+  border: 1px solid rgba(239, 108, 0, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.imageWrap {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+
+  &:hover .removeBtn {
+    opacity: 1;
+  }
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.removeBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(26, 26, 26, 0.8);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ef6c00;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.2s;
+
+  &:hover {
+    background: rgba(239, 108, 0, 0.2);
+  }
+}
+
+.cardBody {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cat {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  color: #7a7068;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  color: #e8e2d9;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+  gap: 8px;
+}
+
+.price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ef6c00;
+}
+
+.addBtn {
+  padding: 6px 12px;
+  background: rgba(239, 108, 0, 0.1);
+  border: 1px solid rgba(239, 108, 0, 0.3);
+  border-radius: 4px;
+  color: #ef6c00;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+
+  &:hover {
+    background: rgba(239, 108, 0, 0.2);
+  }
+}

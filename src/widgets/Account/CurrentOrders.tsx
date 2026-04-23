@@ -1,0 +1,152 @@
+import type { ActiveOrder, ActiveOrderStatus } from '../../types/account';
+import styles from './CurrentOrders.module.scss';
+
+const ORDER_STEPS = ['Оформлен', 'Собран', 'Отправлен', 'Доставлен'];
+
+const STATUS_TO_STEP: Record<ActiveOrderStatus, number> = {
+  placed: 0,
+  assembled: 1,
+  shipped: 2,
+  delivering: 3,
+};
+
+const STATUS_LABEL: Record<ActiveOrderStatus, string> = {
+  placed: 'Обрабатывается',
+  assembled: 'Собран',
+  shipped: 'В пути',
+  delivering: 'Доставляется',
+};
+
+const STATUS_COLOR: Record<ActiveOrderStatus, string> = {
+  placed: '#7a7068',
+  assembled: '#7a7068',
+  shipped: '#ef6c00',
+  delivering: '#4caf50',
+};
+
+const MOCK_ACTIVE: ActiveOrder[] = [
+  {
+    id: '1',
+    number: '00387',
+    date: '18 апреля 2026',
+    items: [
+      {
+        id: 4,
+        name: 'Четки из оливкового дерева',
+        price: 560,
+        qty: 1,
+        img: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400&h=400&fit=crop',
+      },
+      {
+        id: 7,
+        name: 'Ладан афонский',
+        price: 340,
+        qty: 2,
+        img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop',
+      },
+    ],
+    total: 1240,
+    status: 'shipped',
+  },
+  {
+    id: '2',
+    number: '00392',
+    date: '20 апреля 2026',
+    items: [
+      {
+        id: 8,
+        name: 'Псалтирь с толкованием',
+        price: 890,
+        qty: 1,
+        img: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=400&fit=crop',
+      },
+    ],
+    total: 890,
+    status: 'placed',
+  },
+];
+
+const CurrentOrders = () => {
+  return (
+    <div className={styles.container}>
+      <h2 className={styles.title}>Текущие заказы</h2>
+
+      {MOCK_ACTIVE.length === 0 ? (
+        <div className={styles.empty}>
+          <p>Активных заказов нет</p>
+        </div>
+      ) : (
+        <div className={styles.list}>
+          {MOCK_ACTIVE.map((order) => {
+            const currentStep = STATUS_TO_STEP[order.status];
+            return (
+              <div key={order.id} className={styles.orderCard}>
+                <div className={styles.orderHeader}>
+                  <div className={styles.orderMeta}>
+                    <span className={styles.orderNumber}>Заказ #{order.number}</span>
+                    <span className={styles.orderDate}>{order.date}</span>
+                  </div>
+                  <span
+                    className={styles.statusBadge}
+                    style={{ color: STATUS_COLOR[order.status] }}
+                  >
+                    {STATUS_LABEL[order.status]}
+                  </span>
+                </div>
+
+                <div className={styles.progress}>
+                  {ORDER_STEPS.map((step, i) => (
+                    <div key={step} className={styles.stepWrapper}>
+                      <div
+                        className={`${styles.stepDot} ${
+                          i <= currentStep ? styles.stepDotActive : ''
+                        } ${i === currentStep ? styles.stepDotCurrent : ''}`}
+                      />
+                      <span
+                        className={`${styles.stepLabel} ${
+                          i <= currentStep ? styles.stepLabelActive : ''
+                        }`}
+                      >
+                        {step}
+                      </span>
+                      {i < ORDER_STEPS.length - 1 && (
+                        <div
+                          className={`${styles.stepLine} ${
+                            i < currentStep ? styles.stepLineActive : ''
+                          }`}
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                <div className={styles.itemsList}>
+                  {order.items.map((item) => (
+                    <div key={item.id} className={styles.item}>
+                      <img src={item.img} alt={item.name} className={styles.itemImg} />
+                      <div className={styles.itemInfo}>
+                        <span className={styles.itemName}>{item.name}</span>
+                        <span className={styles.itemQty}>× {item.qty}</span>
+                      </div>
+                      <span className={styles.itemPrice}>
+                        {(item.price * item.qty).toLocaleString('ru-RU')} ₽
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className={styles.orderFooter}>
+                  <span className={styles.total}>
+                    Итого: <strong>{order.total.toLocaleString('ru-RU')} ₽</strong>
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default CurrentOrders;

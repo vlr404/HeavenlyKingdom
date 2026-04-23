@@ -1,0 +1,133 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.title {
+  font-family: 'Arsenal', serif;
+  font-size: 22px;
+  color: #e8e2d9;
+}
+
+.unreadBadge {
+  background: #ef6c00;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 20px;
+  padding: 2px 8px;
+  min-width: 22px;
+  text-align: center;
+}
+
+.markAllBtn {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  color: #7a7068;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+
+  &:hover {
+    color: #e8e2d9;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+.empty {
+  background: #242424;
+  border: 1px solid rgba(239, 108, 0, 0.2);
+  border-radius: 8px;
+  padding: 48px;
+  text-align: center;
+  color: #7a7068;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.item {
+  background: #242424;
+  border: 1px solid rgba(239, 108, 0, 0.15);
+  border-radius: 8px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+
+  &:hover {
+    border-color: rgba(239, 108, 0, 0.35);
+  }
+}
+
+.itemUnread {
+  background: #2a2420;
+  border-color: rgba(239, 108, 0, 0.3);
+}
+
+.iconWrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(239, 108, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ef6c00;
+  flex-shrink: 0;
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  color: #e8e2d9;
+  line-height: 1.5;
+}
+
+.date {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  color: #7a7068;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef6c00;
+  flex-shrink: 0;
+}
