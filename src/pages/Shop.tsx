@@ -1,9 +1,8 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import ProductCard from '../components/ProductCard/ProductCard';
-import { StoreLanding } from '../components/StoreLanding/StoreLanding';
 import { useSearch } from '../context/SearchContext';
 import { SHOP_PRODUCTS } from '../data/shopData';
-import './Shop.css';
+import styles from './Shop.module.scss';
 
 const CATEGORY_ICONS: Record<string, string> = {
   'Все':        '🏪',
@@ -21,8 +20,8 @@ type SortKey = 'default' | 'price_asc' | 'price_desc' | 'name_asc';
 
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: 'default',    label: 'По умолчанию' },
-  { value: 'price_asc',  label: 'Цена: по возрастанию' },
-  { value: 'price_desc', label: 'Цена: по убыванию' },
+  { value: 'price_asc',  label: 'Цена ↑' },
+  { value: 'price_desc', label: 'Цена ↓' },
   { value: 'name_asc',   label: 'По названию' },
 ];
 
@@ -33,10 +32,19 @@ export default function Shop() {
   const [sortOpen, setSortOpen]             = useState(false);
   const [minPrice, setMinPrice]             = useState('');
   const [maxPrice, setMaxPrice]             = useState('');
+  const catalogRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     setResults(null);
   }, [setResults]);
+
+  /* Close sort dropdown on outside click */
+  useEffect(() => {
+    if (!sortOpen) return;
+    const close = () => setSortOpen(false);
+    window.addEventListener('click', close);
+    return () => window.removeEventListener('click', close);
+  }, [sortOpen]);
 
   const isSearching = results !== null;
 
@@ -63,23 +71,43 @@ export default function Shop() {
     setResults(null);
   };
 
+  const scrollToCatalog = () => {
+    catalogRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   const activeSortLabel = SORT_OPTIONS.find((o) => o.value === sortKey)?.label ?? 'Сортировка';
 
   return (
     <>
-      <StoreLanding />
+      {/* ── Landing splash ─────────────────────── */}
+      <section className={styles.landing}>
+        <div className={styles.landingGlow} aria-hidden="true" />
+        <p className={styles.landingEyebrow}>Православный интернет-магазин</p>
+        <h1 className={styles.landingTitle}>Царствие Небесное</h1>
+        <div className={styles.landingDivider} />
+        <p className={styles.landingSubtitle}>Иконы · Книги · Украшения · Благовония</p>
+        <button className={styles.landingCta} onClick={scrollToCatalog}>
+          Перейти к покупкам
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </button>
+      </section>
 
-      <div className="shop">
-        <aside className="shop__sidebar">
-          <p className="shop__sidebar-title">Категории</p>
-          <ul className="shop__cat-list">
+      {/* ── Catalog ────────────────────────────── */}
+      <section className={styles.catalog} ref={catalogRef} id="catalog">
+
+        {/* Left sidebar — categories (sticky) */}
+        <aside className={styles.sidebar}>
+          <p className={styles.sidebarTitle}>Категории</p>
+          <ul className={styles.catList}>
             {categories.map((cat) => (
               <li key={cat}>
                 <button
-                  className={`shop__cat-btn${!isSearching && activeCategory === cat ? ' shop__cat-btn--active' : ''}`}
+                  className={`${styles.catBtn} ${!isSearching && activeCategory === cat ? styles.catBtnActive : ''}`}
                   onClick={() => handleCategory(cat)}
                 >
-                  <span className="shop__cat-icon">{CATEGORY_ICONS[cat] ?? '📦'}</span>
+                  <span className={styles.catIcon}>{CATEGORY_ICONS[cat] ?? '📦'}</span>
                   {cat}
                 </button>
               </li>
@@ -87,21 +115,27 @@ export default function Shop() {
           </ul>
         </aside>
 
-        <main className="shop__main">
-          <div className="shop__toolbar">
-            <div className="shop__sort-wrap">
+        {/* Right main — toolbar + grid */}
+        <main className={styles.main}>
+
+          {/* Toolbar — sticky under header */}
+          <div className={styles.toolbar}>
+            <div className={styles.sortWrap} onClick={(e) => e.stopPropagation()}>
               <button
-                className="shop__sort-btn"
+                className={styles.sortBtn}
                 onClick={() => setSortOpen((v) => !v)}
               >
-                ↕ {activeSortLabel}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="9" y2="18"/>
+                </svg>
+                {activeSortLabel}
               </button>
               {sortOpen && (
-                <ul className="shop__sort-dropdown">
+                <ul className={styles.sortDropdown}>
                   {SORT_OPTIONS.map((o) => (
                     <li key={o.value}>
                       <button
-                        className={`shop__sort-option${sortKey === o.value ? ' shop__sort-option--active' : ''}`}
+                        className={`${styles.sortOption} ${sortKey === o.value ? styles.sortOptionActive : ''}`}
                         onClick={() => { setSortKey(o.value); setSortOpen(false); }}
                       >
                         {o.label}
@@ -112,19 +146,19 @@ export default function Shop() {
               )}
             </div>
 
-            <div className="shop__price-filter">
-              <span className="shop__price-label">Цена (MDL)</span>
+            <div className={styles.priceFilter}>
+              <span className={styles.priceLabel}>Цена (₽)</span>
               <input
-                className="shop__price-input"
+                className={styles.priceInput}
                 type="number"
                 min={0}
                 placeholder="от"
                 value={minPrice}
                 onChange={(e) => setMinPrice(e.target.value)}
               />
-              <span className="shop__price-sep">—</span>
+              <span className={styles.priceSep}>—</span>
               <input
-                className="shop__price-input"
+                className={styles.priceInput}
                 type="number"
                 min={0}
                 placeholder="до"
@@ -133,22 +167,31 @@ export default function Shop() {
               />
             </div>
 
-            <span className="shop__count">{displayed.length} товаров</span>
+            <span className={styles.count}>{displayed.length} товаров</span>
           </div>
 
+          {/* Product grid */}
           {displayed.length > 0 ? (
-            <div className="shop__grid" id="products-grid">
+            <div className={styles.grid}>
               {displayed.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
           ) : (
-            <div className="shop__empty" id="products-grid">
+            <div className={styles.empty}>
+              <span>🔍</span>
               <p>Ничего не найдено</p>
+              <button
+                className={styles.resetBtn}
+                onClick={() => { handleCategory('Все'); setMinPrice(''); setMaxPrice(''); }}
+              >
+                Сбросить фильтры
+              </button>
             </div>
           )}
         </main>
-      </div>
+
+      </section>
     </>
   );
 }

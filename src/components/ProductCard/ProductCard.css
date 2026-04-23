@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600&family=Mulish:wght@400;500;600&display=swap");
-
 /* ── Card ────────────────────────────────────────── */
 .pc-card {
   --bg:           #1e1e1e;
@@ -10,7 +8,7 @@
   --text-muted:   #7a7068;
   --radius:       var(--radius-lg, 12px);
 
-  font-family: "Mulish", sans-serif;
+  font-family: "Montserrat", sans-serif;
   background: var(--bg);
   border-radius: var(--radius);
   border: 1px solid rgba(239, 108, 0, 0.15);
@@ -57,7 +55,7 @@
   z-index: 2;
   background: var(--accent);
   color: #fff;
-  font-family: "Unbounded", sans-serif;
+  font-family: "Arsenal", serif;
   font-size: 9px;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -94,12 +92,12 @@
 
 .pc-like:hover {
   transform: scale(1.15);
-  color: #e05555;
+  color: #EF6C00;
   background: rgba(0, 0, 0, 0.75);
 }
 
 .pc-like--active {
-  color: #e05555;
+  color: #EF6C00;
 }
 
 /* ── Body ────────────────────────────────────────── */
@@ -121,7 +119,7 @@
 
 /* ── Name ────────────────────────────────────────── */
 .pc-name {
-  font-family: "Mulish", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 15px;
   font-weight: 600;
   color: var(--text);
@@ -143,7 +141,7 @@
 
 /* ── Price ───────────────────────────────────────── */
 .pc-price {
-  font-family: "Unbounded", sans-serif;
+  font-family: "Arsenal", serif;
   font-size: 16px;
   font-weight: 600;
   color: var(--text);
