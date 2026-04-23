@@ -6,6 +6,7 @@ import { Header } from './components/common/Header/Header'
 import Cart from './pages/Cart'
 import Auth from './pages/Auth'
 import Account from './pages/Account'
+import AdminPage from './pages/Admin/AdminPage'
 import { SearchProvider } from './context/SearchContext'
 
 function App() {
@@ -21,6 +22,8 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/account" element={<Account />} />
+
+            <Route path="/admin" element={<AdminPage />} />
           </Routes>
           </div>
         </div>
