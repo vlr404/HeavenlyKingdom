@@ -7,17 +7,70 @@ import type {
   AdminSectionId,
   DonationGoal,
 } from '../../types/admin';
+import type { CeremonyItem, MusicTrack } from '../../types/media';
 import { SHOP_PRODUCTS } from '../../data/shopData';
 import { StatsPanel } from './sections/StatsPanel';
 import { HolidayManager } from './sections/HolidayManager';
 import { DonationWidget } from './sections/DonationWidget';
 import { StoreManager } from './sections/StoreManager';
+import { MediaManager } from './sections/MediaManager';
+import { useMedia } from '../../context/MediaContext';
 
 const SECTIONS: AdminSection[] = [
-  { id: 'stats',     label: 'Статистика', icon: '📊' },
-  { id: 'holidays',  label: 'Праздники',  icon: '🎉' },
-  { id: 'donations', label: 'Донаты',     icon: '💛' },
-  { id: 'store',     label: 'Магазин',    icon: '🛍️' },
+  {
+    id: 'stats',
+    label: 'Статистика',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10" />
+        <line x1="12" y1="20" x2="12" y2="4" />
+        <line x1="6"  y1="20" x2="6"  y2="14" />
+        <line x1="2"  y1="20" x2="22" y2="20" />
+      </svg>
+    ),
+  },
+  {
+    id: 'holidays',
+    label: 'Праздники',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" />
+        <line x1="16" y1="2" x2="16" y2="6" />
+        <line x1="8"  y1="2" x2="8"  y2="6" />
+        <line x1="3"  y1="10" x2="21" y2="10" />
+      </svg>
+    ),
+  },
+  {
+    id: 'donations',
+    label: 'Донаты',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+      </svg>
+    ),
+  },
+  {
+    id: 'store',
+    label: 'Магазин',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <path d="M16 10a4 4 0 01-8 0" />
+      </svg>
+    ),
+  },
+  {
+    id: 'media',
+    label: 'Медиа',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <polygon points="10 8 16 12 10 16 10 8" />
+      </svg>
+    ),
+  },
 ];
 
 const initialHolidays = (): Holiday[] => {
@@ -49,6 +102,8 @@ const AdminPage = () => {
   const [products, setProducts] = useState<AdminProduct[]>(initialProducts);
   const [categories, setCategories] = useState<string[]>(initialCategories);
   const [goal, setGoal] = useState<DonationGoal>(initialGoal);
+
+  const { ceremonyItems, setCeremonyItems, musicTracks, setMusicTracks, videoUrls, setVideoUrls } = useMedia();
 
   const stats = useMemo(() => {
     const now = new Date();
@@ -105,6 +160,26 @@ const AdminPage = () => {
 
   const resetProgress = () => setGoal((prev) => ({ ...prev, current: 0 }));
 
+  const updateCeremony = (id: string, patch: Partial<CeremonyItem>) => {
+    setCeremonyItems(prev => prev.map(item => item.id === id ? { ...item, ...patch } : item));
+  };
+
+  const addTrack = (track: MusicTrack) => {
+    setMusicTracks(prev => [...prev, track]);
+  };
+
+  const removeTrack = (id: string) => {
+    setMusicTracks(prev => prev.filter(t => t.id !== id));
+  };
+
+  const addVideo = (url: string) => {
+    setVideoUrls(prev => prev.includes(url) ? prev : [...prev, url]);
+  };
+
+  const removeVideo = (url: string) => {
+    setVideoUrls(prev => prev.filter(u => u !== url));
+  };
+
   return (
     <div className="admin">
       <aside className="admin__sidebar">
@@ -149,6 +224,18 @@ const AdminPage = () => {
             onUpdateSalePrice={updateSalePrice}
             onAddCategory={addCategory}
             onRemoveCategory={removeCategory}
+          />
+        )}
+        {active === 'media' && (
+          <MediaManager
+            ceremonyItems={ceremonyItems}
+            musicTracks={musicTracks}
+            videoUrls={videoUrls}
+            onUpdateCeremony={updateCeremony}
+            onAddTrack={addTrack}
+            onRemoveTrack={removeTrack}
+            onAddVideo={addVideo}
+            onRemoveVideo={removeVideo}
           />
         )}
       </main>
