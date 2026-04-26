@@ -1,18 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useMemo } from 'react';
 import './Calendar.css';
-
-type EventData = {
-    date: string;
-    title: string;
-    description: string;
-};
+import { eventsBase } from '../CountdownTimer/holidays';
+import type { EventItem } from '../CountdownTimer/holidays';
 
 type CalendarDay = {
     day: number;
     current: boolean;
     isToday?: boolean;
-    event?: EventData | null;
+    events: EventItem[];
 };
 
 type JumpData = {
@@ -20,12 +16,6 @@ type JumpData = {
     m: string;
     y: string;
 };
-
-const EVENTS_DATA: EventData[] = [
-    { date: '2026-05-03', title: "Bible ggggggggfdddddddddddddddddddddddddSchool 01", description: "Полное описание события для проверки тултипа. Оно должно быть длинным." },
-    { date: '2026-05-08', title: "Church Picnic",  description: "Общий пикник. Не забудьте пледы!" },
-    { date: '2026-05-19', title: "Mission Bay",    description: "Миссионерская поездка на залив." },
-];
 
 export const Calendar = () => {
     const [date, setDate]               = useState<Date>(new Date());
@@ -66,7 +56,7 @@ export const Calendar = () => {
         const grid: CalendarDay[] = [];
 
         for (let i = offset; i > 0; i--) {
-            grid.push({ day: prevMonthDays - i + 1, current: false });
+            grid.push({ day: prevMonthDays - i + 1, current: false, events: [] });
         }
 
         for (let i = 1; i <= daysInMonth; i++) {
@@ -75,13 +65,13 @@ export const Calendar = () => {
                 day: i,
                 current: true,
                 isToday: i === today.getDate() && month === today.getMonth() && year === today.getFullYear(),
-                event: EVENTS_DATA.find(e => e.date === dateStr) ?? null,
+                events: eventsBase.filter(e => e.date.startsWith(dateStr)),
             });
         }
 
         let nextD = 1;
         while (grid.length < 42) {
-            grid.push({ day: nextD++, current: false });
+            grid.push({ day: nextD++, current: false, events: [] });
         }
         return grid;
     }, [date]);
@@ -136,25 +126,57 @@ export const Calendar = () => {
             <main className="cal-grid-frame">
                 {calendarDays.map((item, idx) => {
                     const isLastColumns = (idx % 7) >= 4;
+                    const hasHoliday    = item.events.some(e => e.type === 'holiday');
+                    const visible       = item.events.slice(0, 2);
+                    const overflow      = item.events.length - 2;
+
+                    const sidebarClass = [
+                        'cell-sidebar',
+                        item.isToday               ? 'today-highlight'   : '',
+                        !item.isToday && hasHoliday ? 'holiday-highlight' : '',
+                    ].filter(Boolean).join(' ');
+
+                    const bodyClass = [
+                        'cell-body',
+                        hasHoliday              ? 'body-has-holiday' :
+                        item.events.length > 0  ? 'body-has-event'   : 'body-no-event',
+                    ].join(' ');
+
                     return (
                         <div key={idx} className="cal-cell-unit">
-                            <div className={`cell-sidebar ${item.isToday ? 'today-highlight' : ''}`}>
+                            <div className={sidebarClass}>
                                 <span className={item.current ? 'day-num-active' : 'day-num-off'}>
                                     {item.day < 10 ? `0${item.day}` : item.day}
                                 </span>
                             </div>
-                            <div className={`cell-body ${item.event ? 'body-has-event' : 'body-no-event'}`}>
-                                {item.event && (
+                            <div className={bodyClass}>
+                                {item.events.length > 0 && (
                                     <div className="event-item-container">
-                                        <div className="event-mini-card">
-                                            <span className="event-mini-title">{item.event.title}</span>
-                                            <p className="event-mini-text">{item.event.description}</p>
+                                        <div className="event-chips">
+                                            {visible.map((ev) => (
+                                                <div key={ev.id} className={`event-chip event-chip--${ev.type}`}>
+                                                    <span className="event-chip-title">{ev.title}</span>
+                                                </div>
+                                            ))}
+                                            {overflow > 0 && (
+                                                <span className="event-more">+{overflow} ещё</span>
+                                            )}
                                         </div>
                                         <div className={`event-huge-tooltip ${isLastColumns ? 'align-right' : ''}`}>
-                                            <strong className="tooltip-title">{item.event.title}</strong>
-                                            {item.event.description && (
-                                                <p className="tooltip-full-text">{item.event.description}</p>
-                                            )}
+                                            {item.events.map((ev, i) => (
+                                                <div key={ev.id} className="tooltip-event">
+                                                    {i > 0 && <hr className="tooltip-divider" />}
+                                                    <div className="tooltip-event-header">
+                                                        <strong className="tooltip-title">{ev.title}</strong>
+                                                        <span className={`tooltip-badge tooltip-badge--${ev.type}`}>
+                                                            {ev.type === 'holiday' ? 'Праздник' : 'Событие'}
+                                                        </span>
+                                                    </div>
+                                                    {ev.description && (
+                                                        <p className="tooltip-full-text">{ev.description}</p>
+                                                    )}
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
                                 )}
