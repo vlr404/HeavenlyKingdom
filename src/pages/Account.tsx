@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../entity/auth/authStore';
 import BackButton from '../components/common/BackButton/BackButton';
@@ -15,7 +15,7 @@ type TabId = 'profile' | 'history' | 'orders' | 'favorites' | 'addresses' | 'not
 interface TabConfig {
   id: TabId;
   label: string;
-  icon: JSX.Element;
+  icon: ReactElement;
 }
 
 const TABS: TabConfig[] = [
