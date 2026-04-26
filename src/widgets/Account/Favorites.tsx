@@ -89,7 +89,7 @@ const Favorites = () => {
               <span className={styles.name}>{product.name}</span>
               <div className={styles.cardFooter}>
                 <span className={styles.price}>
-                  {product.price.toLocaleString('ru-RU')} ₽
+                  {product.price.toLocaleString('ro-MD')} MDL
                 </span>
                 <button className={styles.addBtn}>В корзину</button>
               </div>
