@@ -1,0 +1,154 @@
+.cshop {
+  background: #111;
+  border: 1px solid #1e1e1e;
+  border-radius: 14px;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.cshop__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #888;
+}
+
+/* ── Shop list ───────────────── */
+.cshop__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cshop__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px 10px 8px;
+  border-radius: 8px;
+  border: 1px solid #1e1e1e;
+  background: #0e0e0e;
+  transition: border-color 0.2s;
+}
+.cshop__item:hover { border-color: #2a2a2a; }
+
+.cshop__candle-icon {
+  width: 28px;
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.shop-flame {
+  animation: shopFlicker 3s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+@keyframes shopFlicker {
+  0%, 100% { transform: scaleX(1)    scaleY(1);    opacity: 1; }
+  30%       { transform: scaleX(0.9)  scaleY(1.1);  opacity: 0.9; }
+  60%       { transform: scaleX(1.05) scaleY(0.95); opacity: 1; }
+}
+
+.cshop__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cshop__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #d8c8a0;
+}
+
+.cshop__desc {
+  font-size: 10px;
+  color: #555;
+}
+
+.cshop__right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.cshop__price {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ff8c00;
+  white-space: nowrap;
+}
+
+.cshop__buy {
+  padding: 4px 12px;
+  background: rgba(255, 107, 0, 0.15);
+  border: 1px solid rgba(255, 107, 0, 0.3);
+  border-radius: 5px;
+  color: #ff8c00;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.cshop__buy:hover {
+  background: rgba(255, 107, 0, 0.25);
+  border-color: rgba(255, 107, 0, 0.5);
+}
+
+/* ── Divider ─────────────────── */
+.cshop__divider {
+  border: none;
+  border-top: 1px solid #1c1c1c;
+  margin: 0;
+}
+
+/* ── Inventory ───────────────── */
+.cshop__inv-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #555;
+}
+
+.cshop__inv-count {
+  background: rgba(255, 107, 0, 0.2);
+  color: #ff8c00;
+  font-size: 10px;
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.cshop__inv {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cshop__empty-hint {
+  font-size: 11px;
+  color: #3a3a3a;
+  text-align: center;
+  line-height: 1.5;
+  margin: 0;
+  font-style: italic;
+}

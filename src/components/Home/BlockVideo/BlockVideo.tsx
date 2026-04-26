@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import './BlockVideo.css';
+import { useMedia } from '../../../context/MediaContext';
 
 type VideoItem = {
     id: string;
@@ -8,12 +9,6 @@ type VideoItem = {
     previewImg: string;
     embedUrl: string;
 };
-
-const rawVideoUrls: string[] = [
-    "https://www.youtube.com/watch?v=hIurV-bp884",
-    "https://www.youtube.com/watch?v=7X8II6J-6mU",
-    "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-];
 
 const getYoutubeData = async (url: string): Promise<VideoItem | null> => {
     try {
@@ -38,6 +33,7 @@ const getYoutubeData = async (url: string): Promise<VideoItem | null> => {
 };
 
 export const BlockVideo = () => {
+    const { videoUrls } = useMedia();
     const [videos, setVideos]               = useState<VideoItem[]>([]);
     const [selectedVideo, setSelectedVideo] = useState<VideoItem | null>(null);
     const [loading, setLoading]             = useState<boolean>(false);
@@ -45,12 +41,12 @@ export const BlockVideo = () => {
     useEffect(() => {
         const load = async () => {
             setLoading(true);
-            const results = await Promise.all(rawVideoUrls.map(getYoutubeData));
+            const results = await Promise.all(videoUrls.map(getYoutubeData));
             setVideos(results.filter((v): v is VideoItem => v !== null));
             setLoading(false);
         };
         load();
-    }, []);
+    }, [videoUrls]);
 
     return (
         <div className="video-list">

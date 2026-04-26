@@ -1,0 +1,155 @@
+.page {
+  min-height: 100vh;
+  background: #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--header-height, 70px) + 40px) 20px 40px;
+  position: relative;
+}
+
+.backWrap {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+}
+
+.card {
+  background: #242424;
+  border: 1px solid rgba(239, 108, 0, 0.2);
+  border-radius: 8px;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.cross {
+  font-size: 40px;
+  color: #ef6c00;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+
+.title {
+  font-family: 'Arsenal', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #e8e2d9;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  color: #7a7068;
+  margin-bottom: 32px;
+}
+
+.tabs {
+  display: flex;
+  width: 100%;
+  border-bottom: 1px solid rgba(239, 108, 0, 0.2);
+  margin-bottom: 28px;
+}
+
+.tab {
+  flex: 1;
+  padding: 12px 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: #7a7068;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+
+  &:hover {
+    color: #e8e2d9;
+  }
+}
+
+.activeTab {
+  color: #ef6c00;
+  border-bottom-color: #ef6c00;
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  color: #7a7068;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.input {
+  background: #1a1a1a;
+  border: 1px solid rgba(239, 108, 0, 0.2);
+  border-radius: 4px;
+  padding: 12px 14px;
+  color: #e8e2d9;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+
+  &::placeholder {
+    color: #7a7068;
+  }
+
+  &:focus {
+    border-color: #ef6c00;
+  }
+}
+
+.error {
+  color: #ef5350;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  margin-top: -8px;
+}
+
+.submitBtn {
+  background: #ef6c00;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 14px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  margin-top: 4px;
+  width: 100%;
+
+  &:hover {
+    background: #d45f00;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}

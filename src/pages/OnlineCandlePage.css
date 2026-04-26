@@ -1,0 +1,247 @@
+/* ═══════════════════════════════════════
+   OnlineCandlePage — root layout
+═══════════════════════════════════════ */
+.cp {
+  position: relative;
+  min-height: 100vh;
+  background: #0e0e0e;
+  color: #e8e0d0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Radial warm background glow */
+.cp__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 42% 65%, rgba(255, 107, 0, 0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 30% 30% at 75% 40%, rgba(255, 140, 0, 0.04) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Ambient toggle (UX#2) ─── */
+.cp__ambient {
+  position: fixed;
+  top: 72px;
+  right: 24px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border: 1px solid #2e2e2e;
+  border-radius: 24px;
+  background: #1a1a1a;
+  color: #777;
+  font-size: 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.cp__ambient:hover { color: #bbb; border-color: #444; }
+.cp__ambient--on {
+  color: #ff8c00;
+  border-color: rgba(255, 140, 0, 0.4);
+  background: rgba(255, 107, 0, 0.08);
+}
+
+/* ── Header ─────────────────── */
+.cp__header {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 56px 24px 32px;
+}
+
+.cp__eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #ff8c00;
+  margin: 0 0 12px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.cp__title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #f0e8d8;
+  margin: 0 0 10px;
+  letter-spacing: -0.02em;
+}
+
+.cp__sub {
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+  letter-spacing: 0.03em;
+}
+
+/* ── Body layout ─────────────── */
+.cp__body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 0;
+  flex: 1;
+  padding: 0 24px 40px;
+  align-items: flex-start;
+}
+
+.cp__stand-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.cp__shop-wrap {
+  width: 296px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 64px;
+}
+
+/* ── Prayer modal overlay (UX#1) ─── */
+.cp__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  animation: overlayIn 0.2s ease;
+}
+
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.cp__modal {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 32px 28px;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  box-shadow: 0 0 60px rgba(255, 107, 0, 0.12);
+  animation: modalIn 0.22s ease;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.94) translateY(8px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+.cp__modal-icon {
+  filter: drop-shadow(0 0 12px rgba(255, 150, 0, 0.6));
+  animation: flameFloat 3s ease-in-out infinite;
+}
+
+@keyframes flameFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-4px); }
+}
+
+.cp__modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #f0e8d8;
+  margin: 0;
+}
+
+/* ── Intention tabs ─────────── */
+.cp__modal-tabs {
+  display: flex;
+  gap: 0;
+  border: 1px solid #2e2e2e;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.cp__modal-tabs button {
+  flex: 1;
+  padding: 9px 0;
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  transition: color 0.15s, background 0.15s;
+}
+
+.cp__modal-tabs button + button { border-left: 1px solid #2e2e2e; }
+
+.cp__modal-tabs button.active {
+  background: rgba(255, 107, 0, 0.12);
+  color: #ff8c00;
+}
+
+.cp__modal-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: #e0d8c8;
+  font-size: 14px;
+  font-family: 'Montserrat', sans-serif;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.cp__modal-input:focus { border-color: #ff8c00; }
+.cp__modal-input::placeholder { color: #444; }
+
+.cp__modal-meta {
+  font-size: 12px;
+  color: #555;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.cp__modal-btns {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.cp__modal-confirm {
+  flex: 1;
+  padding: 11px 0;
+  background: linear-gradient(135deg, #ff6b00, #ff9500);
+  border: none;
+  border-radius: 8px;
+  color: #000;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  transition: opacity 0.15s;
+}
+.cp__modal-confirm:hover { opacity: 0.88; }
+
+.cp__modal-cancel {
+  padding: 11px 18px;
+  background: transparent;
+  border: 1px solid #2e2e2e;
+  border-radius: 8px;
+  color: #555;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  transition: color 0.15s, border-color 0.15s;
+}
+.cp__modal-cancel:hover { color: #888; border-color: #444; }

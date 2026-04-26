@@ -1,0 +1,72 @@
+.dc {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #222;
+  background: #111;
+  transition: border-color 0.2s, background 0.2s;
+  user-select: none;
+}
+
+.dc--draggable {
+  cursor: grab;
+}
+.dc--draggable:hover {
+  border-color: rgba(255, 140, 0, 0.35);
+  background: rgba(255, 107, 0, 0.06);
+}
+.dc--draggable:active { cursor: grabbing; }
+
+.dc--empty {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.dc__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.dc__flame {
+  animation: dcFlicker 2.5s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+@keyframes dcFlicker {
+  0%, 100% { transform: scaleX(1) scaleY(1); opacity: 1; }
+  30%       { transform: scaleX(0.88) scaleY(1.08); opacity: 0.9; }
+  60%       { transform: scaleX(1.06) scaleY(0.94); opacity: 1; }
+}
+
+.dc--empty .dc__flame { animation: none; opacity: 0.2; }
+
+.dc__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dc__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #c8b890;
+}
+
+.dc__hint {
+  font-size: 10px;
+  color: #555;
+  font-style: italic;
+}
+
+.dc__badge {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ff8c00;
+  min-width: 24px;
+  text-align: right;
+}
+.dc__badge--zero { color: #333; }

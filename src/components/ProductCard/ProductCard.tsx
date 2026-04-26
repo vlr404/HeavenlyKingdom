@@ -1,7 +1,9 @@
+
 import { useState } from 'react';
 import './ProductCard.css';
 import type { Product } from '../../types';
 import { useCartStore } from '../../entity/cart/cartStore';
+import { useFavoritesStore } from '../../entity/favorites/favoritesStore';
 
 interface Props {
   product: Product;
@@ -10,8 +12,9 @@ interface Props {
 const ProductCard = ({ product }: Props) => {
   const { name, price, cat, img, isNew } = product;
   const { addItem } = useCartStore();
+  const { toggle, isFavorite } = useFavoritesStore();
+  const liked = isFavorite(product.id);
 
-  const [liked, setLiked] = useState(false);
   const [added, setAdded] = useState(false);
 
   const handleAdd = () => {
@@ -27,8 +30,8 @@ const ProductCard = ({ product }: Props) => {
         <img src={img} alt={name} className="pc-image" />
         <button
           className={`pc-like${liked ? ' pc-like--active' : ''}`}
-          onClick={() => setLiked((v) => !v)}
-          aria-label="В избранное"
+          onClick={() => toggle(product)}
+          aria-label={liked ? 'Убрать из избранного' : 'В избранное'}
         >
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path

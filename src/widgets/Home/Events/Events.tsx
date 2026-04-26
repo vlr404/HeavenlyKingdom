@@ -7,12 +7,13 @@ import { Space } from '../../../components/common/Space/Space.js';
 
 export const Events = () => {
     return (
-        <section id="events" className="Events">
+        <section id="e
+        vents" className="Events">
             <Divider title="События" />
             <Quote text="Присоединяйтесь к нашим богослужениям и церковным событиям." />
             <Calendar />
             <Space mt={100} />
-            <QuoteBlock title="ОНЛАЙН-ПОЖЕРТВОВАНИE" text="Ваша помощь помогает нам совершать добрые дела и поддерживать приход." backgr_img="foto/Events.png" buttonText="Узнать больше" />
+            <QuoteBlock title="ОНЛАЙН-ПОЖЕРТВОВАНИE" text="Ваша помощь помогает нам совершать добрые дела и поддерживать приход." backgr_img={`${import.meta.env.BASE_URL}foto/Events.png`} buttonText="Узнать больше" />
         </section>
     );
 };
