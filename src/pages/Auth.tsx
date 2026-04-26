@@ -28,16 +28,17 @@ const Auth = () => {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    const isAdmin = loginForm.email === 'admin@admin.com' && loginForm.password === 'admin';
+    const isAdmin  = loginForm.email === 'admin@admin.com' && loginForm.password === 'admin';
+    const isPriest = loginForm.email === 'priest@test.com';
     login({
-      id: isAdmin ? 'admin' : '1',
-      name: isAdmin ? 'Администратор' : 'Николай',
-      lastName: isAdmin ? '' : 'Иванов',
-      email: loginForm.email,
-      phone: '',
+      id:       isAdmin ? 'admin' : isPriest ? 'priest1' : '1',
+      name:     isAdmin ? 'Администратор' : isPriest ? 'Николай' : 'Николай',
+      lastName: isAdmin ? '' : isPriest ? 'Чудотворец' : 'Иванов',
+      email:    loginForm.email,
+      phone:    '',
       isAdmin,
     });
-    navigate(isAdmin ? '/admin' : '/account');
+    navigate(isAdmin ? '/admin' : isPriest ? '/priest-cabinet' : '/account');
   };
 
   const handleRegister = (e: React.FormEvent) => {
