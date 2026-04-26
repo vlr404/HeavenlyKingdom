@@ -8,6 +8,7 @@ export interface User {
   email: string;
   phone: string;
   avatar?: string;
+  isAdmin?: boolean;
 }
 
 interface AuthStore {

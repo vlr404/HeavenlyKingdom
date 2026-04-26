@@ -17,7 +17,7 @@ const CartItem = ({ item }: Props) => {
         <span className={styles.cat}>{item.cat}</span>
         <p className={styles.name}>{item.name}</p>
         <span className={styles.price}>
-          {(item.price * item.qty).toLocaleString('ru')} ₽
+          {(item.price * item.qty).toLocaleString('ro-MD')} MDL
         </span>
       </div>
 

@@ -14,10 +14,11 @@
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid rgba(239, 108, 0, 0.1);
-  z-index: 1000;
+  z-index: 10000;
 }
 
 .inner {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -39,75 +40,68 @@
 }
 
 .logoImg {
-  width: 44px;
-  height: 44px;
+  width: 95px;
+  height: auto;
   object-fit: contain;
 }
 
 .logoText {
-  font-family: 'Arsenal', serif;
-  font-size: 13px;
-  font-weight: 700;
+  font-family: 'Shafarik', serif;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1;
   color: #fff;
-  line-height: 1.25;
-  letter-spacing: 0.04em;
   white-space: nowrap;
 }
 
 /* ── Home navigation ──────────────────────── */
 .nav {
-  flex: 1;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.nav ul {
   display: flex;
+  align-items: center;
   justify-content: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 
-  ul {
-    display: flex;
-    align-items: center;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    gap: 0;
-  }
+.nav ul li {
+  position: relative;
+  padding: 0 13px;
+}
 
-  li {
-    position: relative;
-    padding: 0 14px;
+.nav ul li::after {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 2px;
+  height: 10px;
+  content: "";
+  transform: translateY(-50%);
+  border-radius: 2px;
+  background-color: #8E8E8E;
+}
 
-    &::after {
-      content: '';
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 1px;
-      height: 10px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 1px;
-    }
-
-    &:last-child::after {
-      display: none;
-    }
-  }
+.nav ul li:last-child::after {
+  display: none;
 }
 
 .navItem {
-  color: #ccc;
-  text-decoration: none;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
   white-space: nowrap;
-  transition: color 0.2s;
-  padding: 4px 0;
-  border-top: 2px solid transparent;
-  border-bottom: 2px solid transparent;
+  text-decoration: none;
+  color: #fff;
+  font-size: 12px;
+}
 
-  &:hover {
-    color: #fff;
-    border-bottom-color: #ef6c00;
-  }
+.navItem:hover {
+  padding: 2px 0;
+  border-top: 2px solid #EF6C00;
+  border-bottom: 2px solid #EF6C00;
 }
 
 /* ── Shop mode — search center ────────────── */
@@ -297,42 +291,3 @@
   line-height: 1;
 }
 
-/* ── Responsive ───────────────────────────── */
-@media (max-width: 900px) {
-  .nav ul li {
-    padding: 0 9px;
-  }
-
-  .navItem {
-    font-size: 10px;
-  }
-}
-
-@media (max-width: 700px) {
-  .inner {
-    padding: 0 16px;
-    gap: 12px;
-  }
-
-  .logoText {
-    display: none;
-  }
-
-  .shopSearch {
-    max-width: 100%;
-  }
-
-  .breadcrumbs {
-    gap: 4px;
-  }
-
-  .breadCurrent {
-    display: none;
-  }
-}
-
-@media (max-width: 520px) {
-  .nav ul li:not(:last-child):not(:nth-last-child(2)) {
-    display: none;
-  }
-}

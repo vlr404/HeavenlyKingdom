@@ -1,3 +1,5 @@
+
+
 import { useState } from 'react';
 import type { DonationWidgetProps } from '../../../types/admin';
 
@@ -32,7 +34,7 @@ export const DonationWidget = ({
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
             <strong>{goal.title}</strong>
             <span style={{ color: 'var(--admin-text-dim)' }}>
-              {goal.current.toLocaleString('ru-RU')} ₽ / {goal.target.toLocaleString('ru-RU')} ₽
+              {goal.current.toLocaleString('ro-MD')} MDL / {goal.target.toLocaleString('ro-MD')} MDL
             </span>
           </div>
           <div className="progress">
@@ -58,7 +60,7 @@ export const DonationWidget = ({
             />
           </div>
           <div className="field">
-            <label htmlFor="d-target">Целевая сумма (₽)</label>
+            <label htmlFor="d-target">Целевая сумма (MDL)</label>
             <input
               id="d-target"
               type="number"
@@ -76,7 +78,7 @@ export const DonationWidget = ({
         <h2 className="card__title">Добавить прогресс (ручная имитация)</h2>
         <div className="row">
           <div className="field">
-            <label htmlFor="d-amount">Сумма (₽)</label>
+            <label htmlFor="d-amount">Сумма (MDL)</label>
             <input
               id="d-amount"
               type="number"
@@ -90,10 +92,10 @@ export const DonationWidget = ({
             + Добавить
           </button>
           <button className="btn btn--ghost" onClick={() => onAddProgress(500)}>
-            +500 ₽
+            +500 MDL
           </button>
           <button className="btn btn--ghost" onClick={() => onAddProgress(5000)}>
-            +5000 ₽
+            +5000 MDL
           </button>
           <button className="btn btn--danger btn--sm" onClick={onReset}>
             Сбросить

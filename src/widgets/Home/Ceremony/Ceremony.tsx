@@ -21,7 +21,7 @@ export const Ceremony = () => {
                         дабы всякий верующий в Него, не погиб, но имел жизнь вечную. 
                         Вера же есть осуществление ожидаемого и уверенность в невидимом."
                 autor="Майк Эрмантраут" san="Ведущий пастор"
-                backgr_img="./public/foto/testimonials.png"/>
+                backgr_img={`${import.meta.env.BASE_URL}foto/testimonials.png`}/>
         </section>
     );
 };

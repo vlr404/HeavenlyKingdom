@@ -29,6 +29,7 @@
   background: var(--admin-bg);
   color: var(--admin-text);
   font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  
 }
 
 .admin__sidebar {
@@ -354,15 +355,3 @@
   margin-bottom: var(--space-2);
 }
 
-@media (max-width: 768px) {
-  .admin {
-    grid-template-columns: 1fr;
-  }
-  .admin__sidebar {
-    flex-direction: row;
-    overflow-x: auto;
-  }
-  .admin__nav {
-    flex-direction: row;
-  }
-}

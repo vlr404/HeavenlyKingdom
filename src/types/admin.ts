@@ -1,12 +1,13 @@
+import type { ReactElement } from 'react';
 import type { Holiday } from './holiday';
 import type { Product } from './index';
 
-export type AdminSectionId = 'stats' | 'holidays' | 'donations' | 'store';
+export type AdminSectionId = 'stats' | 'holidays' | 'donations' | 'store' | 'media';
 
 export interface AdminSection {
   id: AdminSectionId;
   label: string;
-  icon: string;
+  icon: ReactElement;
 }
 
 export interface HolidayManagerProps {

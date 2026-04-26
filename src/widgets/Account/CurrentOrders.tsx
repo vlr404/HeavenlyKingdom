@@ -129,7 +129,7 @@ const CurrentOrders = () => {
                         <span className={styles.itemQty}>× {item.qty}</span>
                       </div>
                       <span className={styles.itemPrice}>
-                        {(item.price * item.qty).toLocaleString('ru-RU')} ₽
+                        {(item.price * item.qty).toLocaleString('ro-MD')} MDL
                       </span>
                     </div>
                   ))}
@@ -137,7 +137,7 @@ const CurrentOrders = () => {
 
                 <div className={styles.orderFooter}>
                   <span className={styles.total}>
-                    Итого: <strong>{order.total.toLocaleString('ru-RU')} ₽</strong>
+                    Итого: <strong>{order.total.toLocaleString('ro-MD')} MDL</strong>
                   </span>
                 </div>
               </div>

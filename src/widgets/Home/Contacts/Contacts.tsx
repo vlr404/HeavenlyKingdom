@@ -19,7 +19,7 @@ export const Contacts = () => {
                     emale="http://www.mitropolia.md/"
                 />
                 <Space mt={150} />
-                <QuoteBlock title="СВЯЗАТЬСЯ С НАМИ" text="Пріидите, возрадуемся Господеви, воскликнемъ Богу Спасителю нашему: предваримъ в лице Его во исповѣданіи, и во псалмѣхъ воскликнемъ Ему. Яко Богъ Велій Господь, и Царь Велій по всей земли." backgr_img="./public/foto/Anghel.png"
+                <QuoteBlock title="СВЯЗАТЬСЯ С НАМИ" text="Пріидите, возрадуемся Господеви, воскликнемъ Богу Спасителю нашему: предваримъ в лице Его во исповѣданіи, и во псалмѣхъ воскликнемъ Ему. Яко Богъ Велій Господь, и Царь Велій по всей земли." backgr_img={`${import.meta.env.BASE_URL}foto/Anghel.png`}
                     socialmedia={{ instagram: "l", facebook: "l", gmail: "l", youtube: "l", telegram: "l"  }} 
                 />
             </div>

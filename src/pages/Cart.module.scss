@@ -1,3 +1,5 @@
+
+
 $accent: #EF6C00;
 $bg: #1a1a1a;
 $surface: #242424;
@@ -90,9 +92,6 @@ $border: rgba(239, 108, 0, 0.2);
   gap: 24px;
   align-items: flex-start;
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
 }
 
 // Список товаров
