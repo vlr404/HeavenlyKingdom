@@ -106,7 +106,7 @@ export const StoreManager = ({
                   {p.onSale && <span className="badge badge--sale" style={{ marginLeft: 8 }}>Скидка</span>}
                 </td>
                 <td>{p.cat}</td>
-                <td>{p.price.toLocaleString('ru-RU')} ₽</td>
+                <td>{p.price.toLocaleString('ro-MD')} MDL</td>
                 <td>
                   <label className="toggle">
                     <input
