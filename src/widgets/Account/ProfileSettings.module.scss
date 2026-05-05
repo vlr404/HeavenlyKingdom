@@ -4,9 +4,6 @@
   border-radius: 8px;
   padding: 32px;
 
-  @media (max-width: 480px) {
-    padding: 20px;
-  }
 }
 
 .title {
@@ -83,9 +80,6 @@
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 
-  @media (max-width: 580px) {
-    grid-template-columns: 1fr;
-  }
 }
 
 .field {

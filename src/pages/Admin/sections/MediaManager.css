@@ -1,0 +1,204 @@
+.media-manager {
+  color: #e0e0e0;
+  padding: 0 4px;
+}
+
+.media-manager__heading {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+/* ── Tabs ──────────────────────────────────── */
+.media-manager__tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 4px;
+}
+
+.media-manager__tabs button {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 14px;
+  padding: 6px 16px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.media-manager__tabs button.active {
+  color: #ff8c00;
+  border-bottom-color: #ff8c00;
+}
+
+/* ── Section ──────────────────────────────── */
+.media-manager__section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.media-manager__hint {
+  font-size: 13px;
+  color: #888;
+  margin: 0;
+}
+
+/* ── Table ──────────────────────────────────── */
+.media-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.media-table th,
+.media-table td {
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 1px solid #2a2a2a;
+  vertical-align: middle;
+}
+
+.media-table th {
+  color: #888;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.media-table tr:hover td {
+  background: #1e1e1e;
+}
+
+.ceremony-event-name {
+  font-weight: 600;
+  white-space: nowrap;
+  color: #fff;
+}
+
+.music-name {
+  color: #ccc;
+  font-style: italic;
+}
+
+.url-cell {
+  color: #666;
+  font-size: 12px;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Buttons ────────────────────────────────── */
+.media-actions {
+  display: flex;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.btn-edit,
+.btn-save,
+.btn-cancel,
+.btn-add,
+.btn-remove {
+  padding: 4px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: opacity 0.15s;
+}
+
+.btn-edit   { background: #333; color: #ccc; }
+.btn-save   { background: #ff8c00; color: #000; }
+.btn-cancel { background: #444; color: #ccc; }
+.btn-add    { background: #ff8c00; color: #000; white-space: nowrap; }
+.btn-remove { background: #8b1a1a; color: #fff; }
+
+.btn-edit:hover,
+.btn-save:hover,
+.btn-cancel:hover,
+.btn-add:hover,
+.btn-remove:hover { opacity: 0.8; }
+
+/* ── Add form ──────────────────────────────── */
+.media-add-form {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.media-add-form h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  color: #fff;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.media-input {
+  background: #222;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #e0e0e0;
+  font-size: 13px;
+  padding: 6px 10px;
+  flex: 1;
+  min-width: 0;
+  transition: border-color 0.2s;
+}
+
+.media-input:focus {
+  outline: none;
+  border-color: #ff8c00;
+}
+
+.flex-1 { flex: 1; }
+
+/* ── Video URL list ─────────────────────────── */
+.video-url-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.video-url-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  padding: 10px 14px;
+}
+
+.video-url-link {
+  color: #69aaff;
+  font-size: 13px;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.video-url-link:hover { text-decoration: underline; }

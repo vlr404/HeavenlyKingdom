@@ -1,0 +1,485 @@
+/* ═══════════════════════════════════════════
+   IndulgencePage — Seven Sins Wheel
+   Strict 100vh − 70px · no scroll · 8px grid
+═══════════════════════════════════════════ */
+
+:root {
+  --ip-bg:       #121212;
+  --ip-surface:  #1a0d0d;
+  --ip-border:   rgba(140, 10, 10, 0.28);
+  --ip-accent:   #c0392b;
+  --ip-glow:     #ff4500;
+  --ip-gold:     #d4a017;
+  --ip-text:     #e8d5c4;
+  --ip-muted:    rgba(232, 213, 196, 0.42);
+  --ip-radius:   10px;
+  --ip-grid:     8px;
+}
+
+/* ── Page shell — strict height, no scroll ── */
+.ip {
+  height: calc(100vh - 70px);
+  overflow: hidden;
+  background: var(--ip-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  /* vignette */
+  isolation: isolate;
+}
+
+.ip::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,0.72) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Holy-light overlay ─────────────────── */
+.ip__holy {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% 38%, #fffef5 0%, #ffe8a0 30%, rgba(255,220,80,0) 68%);
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* ── Ember particles ────────────────────── */
+.ip__bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.ip__ember {
+  position: absolute;
+  border-radius: 50%;
+  animation: ember-rise linear infinite;
+}
+
+@keyframes ember-rise {
+  0%   { transform: translateY(0)       scale(1);    opacity: 0; }
+  8%   { opacity: 1; }
+  85%  { opacity: 0.6; }
+  100% { transform: translateY(-100vh)  scale(0.35); opacity: 0; }
+}
+
+/* ── Main layout ────────────────────────── */
+.ip__body {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  width: 100%;
+  max-width: 1060px;
+  padding: 0 24px;
+}
+
+/* ── Wheel column ───────────────────────── */
+.ip__wheel-col {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.ip__page-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ip-accent);
+  margin: 0;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Wheel wrapper — responsive square ── */
+.ip__wheel-wrap {
+  position: relative;
+  /* shrink if viewport is short */
+  width:  min(390px, calc(100vh - 70px - 210px));
+  height: min(390px, calc(100vh - 70px - 210px));
+  flex-shrink: 0;
+}
+
+.ip__wheel-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 0 24px rgba(160, 10, 0, 0.35));
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Center HTML overlay ────────────────── */
+.ip__center-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  text-align: center;
+}
+
+.ip__center-sel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.ip__center-name {
+  display: block;
+  font-family: 'Arsenal', serif;
+  font-size: 15px;
+  font-weight: 700;
+  text-shadow: 0 0 12px currentColor;
+  line-height: 1.2;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.ip__center-latin {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.4);
+  font-style: italic;
+}
+
+.ip__center-idle {
+  font-size: 22px;
+  color: rgba(180, 40, 40, 0.4);
+  line-height: 1;
+}
+
+/* ── Hover tooltip ──────────────────────── */
+.ip__tooltip-wrap {
+  width: 100%;
+  max-width: 390px;
+  height: 58px;   /* fixed — prevents layout shift */
+  display: flex;
+  align-items: center;
+}
+
+.ip__tooltip {
+  width: 100%;
+  padding: 8px 14px;
+  background: var(--ip-surface);
+  border: 1px solid var(--ip-border);
+  border-radius: var(--ip-radius);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11.5px;
+  color: var(--ip-text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.ip__tooltip-name {
+  display: block;
+  font-family: 'Arsenal', serif;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.ip__tooltip-hint {
+  color: rgba(255,255,255,0.2);
+  font-style: italic;
+}
+
+/* ── Right panel ────────────────────────── */
+.ip__panel {
+  width: 272px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ip__card {
+  background: var(--ip-surface);
+  border: 1px solid var(--ip-border);
+  border-radius: var(--ip-radius);
+  padding: 10px 14px;
+}
+
+.ip__card-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ip-accent);
+  margin: 0 0 8px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* selected sin */
+.ip__sin-name {
+  font-family: 'Arsenal', serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 2px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.ip__sin-latin {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  color: var(--ip-muted);
+  letter-spacing: 0.1em;
+  font-style: italic;
+  margin-bottom: 4px;
+}
+
+.ip__sin-price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  color: var(--ip-muted);
+}
+
+.ip__sin-price strong {
+  color: var(--ip-gold);
+}
+
+.ip__sin-empty {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  color: var(--ip-muted);
+  font-style: italic;
+  margin: 0;
+}
+
+/* gravity slider */
+.ip__grav-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.ip__grav-val {
+  font-family: 'Arsenal', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ip-glow);
+  line-height: 1;
+}
+
+.ip__grav-tag {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  color: var(--ip-muted);
+  text-align: right;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+
+.ip__grav-tag em {
+  color: var(--ip-glow);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.ip__slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 5px;
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+  background: linear-gradient(
+    to right,
+    var(--ip-glow) 0%,
+    var(--ip-glow) var(--sp, 0%),
+    rgba(255,255,255,0.1) var(--sp, 0%),
+    rgba(255,255,255,0.1) 100%
+  );
+}
+
+.ip__slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--ip-glow);
+  border: 3px solid #0a0000;
+  box-shadow: 0 0 8px rgba(255,69,0,0.7);
+  cursor: pointer;
+}
+
+.ip__slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--ip-glow);
+  border: 3px solid #0a0000;
+  box-shadow: 0 0 8px rgba(255,69,0,0.7);
+  cursor: pointer;
+  border: none;
+}
+
+.ip__ticks {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1px;
+  margin-top: 4px;
+}
+
+.ip__tick {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.5px;
+  color: rgba(255,255,255,0.18);
+}
+
+.ip__tick--on {
+  color: var(--ip-glow);
+  font-weight: 700;
+}
+
+/* price */
+.ip__price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+
+.ip__price-amt {
+  font-family: 'Arsenal', serif;
+  font-size: 34px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.ip__price-cur {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  color: var(--ip-muted);
+}
+
+.ip__price-formula {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  color: var(--ip-muted);
+  margin: 0;
+}
+
+.ip__price-formula em {
+  color: var(--ip-gold);
+  font-style: normal;
+}
+
+/* redeem button */
+.ip__redeem-btn {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-radius: var(--ip-radius);
+  background: linear-gradient(135deg, #7a0000 0%, #c0392b 55%, #7a0000 100%);
+  color: #fff;
+  font-family: 'Arsenal', serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.14s, box-shadow 0.14s;
+  box-shadow: 0 3px 16px rgba(192,57,43,0.38);
+  -webkit-font-smoothing: antialiased;
+}
+
+.ip__redeem-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 55%);
+}
+
+.ip__redeem-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 28px rgba(192,57,43,0.65);
+}
+
+.ip__redeem-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.ip__redeem-btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.ip__shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,200,0.28) 50%, transparent);
+  transform: translateX(-100%);
+  animation: shimmer 0.6s ease-out forwards;
+}
+
+@keyframes shimmer {
+  to { transform: translateX(100%); }
+}
+
+/* redeemed state */
+.ip__redeemed {
+  text-align: center;
+}
+
+.ip__redeemed-cross {
+  font-size: 26px;
+  color: var(--ip-gold);
+  margin-bottom: 4px;
+}
+
+.ip__redeemed-title {
+  font-family: 'Arsenal', serif;
+  font-size: 16px;
+  color: var(--ip-gold);
+  margin: 0 0 2px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.ip__redeemed-sub {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  color: var(--ip-muted);
+  margin: 0 0 10px;
+}
+
+.ip__reset-btn {
+  background: none;
+  border: 1px solid var(--ip-border);
+  border-radius: 7px;
+  padding: 6px 14px;
+  color: var(--ip-muted);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  cursor: pointer;
+  transition: border-color 0.18s, color 0.18s;
+}
+
+.ip__reset-btn:hover {
+  border-color: rgba(192,57,43,0.5);
+  color: var(--ip-text);
+}

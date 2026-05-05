@@ -1,11 +1,11 @@
-import styles from './Header.module.scss';
+﻿import styles from './Header.module.scss';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useCartStore } from '../../../entity/cart/cartStore';
 import { useAuthStore } from '../../../entity/auth/authStore';
 import SearchBar from '../SearchBar/SearchBar';
 import { useSearch } from '../../../context/SearchContext';
 
-/* ── Determine header mode from route ─────── */
+
 type Mode = 'home' | 'shop' | 'app' | 'minimal';
 
 function getMode(path: string): Mode {
@@ -15,7 +15,6 @@ function getMode(path: string): Mode {
   return 'app'; // /cart, /account, …
 }
 
-/* ── Cart SVG icon ───────────────────────── */
 const CartSvg = () => (
   <svg width="24" height="21" viewBox="0 0 32 28" fill="none">
     <path
@@ -54,7 +53,7 @@ const Avatar = ({ user, isAuthenticated, onClick }: AvatarProps) => {
 };
 
 /* ── Icons cluster (profile + cart) ─────── */
-const IconsCluster = () => {
+const IconsCluster = ({ showCart = true }: { showCart?: boolean }) => {
   const navigate = useNavigate();
   const items    = useCartStore((s) => s.items);
   const { user, isAuthenticated } = useAuthStore();
@@ -67,14 +66,16 @@ const IconsCluster = () => {
         isAuthenticated={isAuthenticated}
         onClick={() => navigate(isAuthenticated ? '/account' : '/auth')}
       />
-      <button
-        className={styles.cartBtn}
-        onClick={() => navigate('/cart')}
-        aria-label="Корзина"
-      >
-        <CartSvg />
-        {count > 0 && <span className={styles.badge}>{count}</span>}
-      </button>
+      {showCart && (
+        <button
+          className={styles.cartBtn}
+          onClick={() => navigate('/cart')}
+          aria-label="Корзина"
+        >
+          <CartSvg />
+          {count > 0 && <span className={styles.badge}>{count}</span>}
+        </button>
+      )}
     </div>
   );
 };
@@ -82,7 +83,7 @@ const IconsCluster = () => {
 /* ── Logo ────────────────────────────────── */
 const Logo = () => (
   <Link to="/" className={styles.logo}>
-    <img src="/icons/logo.png" alt="Логотип" className={styles.logoImg} />
+    <img src={`${import.meta.env.BASE_URL}icons/logo.png`} alt="Логотип" className={styles.logoImg} />
     <span className={styles.logoText}>ЦАРСТВИЕ<br />НЕБЕСНОЕ</span>
   </Link>
 );
@@ -114,7 +115,7 @@ export const Header = () => {
                 <li><Link to="/shop"    className={styles.navItem}>МАГАЗИН</Link></li>
               </ul>
             </nav>
-            <IconsCluster />
+            <IconsCluster showCart={false} />
           </>
         )}
 

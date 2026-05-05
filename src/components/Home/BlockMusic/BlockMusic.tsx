@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import './BlockMusic.css';
+import { useMedia } from '../../../context/MediaContext';
 
 type Track = {
   id: string;
@@ -10,68 +11,73 @@ type Track = {
   duration: string;
 };
 
-const RAW_URLS: string[] = [
-  '/audio/Alena - Ярмарка судеб (1).mp3',
-  '/audio/Alena - Ярмарка судеб (2).mp3',
-  '/audio/Alena - Ярмарка судеб.mp3',
-  '/audio/Daram Dam & YOKU - Я пришел к тебе с приветом.mp3',
-];
+const fmt = (s: number) => {
+  if (!s || isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return `${m}:${sec < 10 ? '0' : ''}${sec}`;
+};
 
-const buildPlaylist = (): Track[] =>
-  RAW_URLS.map((url, i) => {
-    const fileName = url.split('/').pop()?.replace('.mp3', '') ?? '';
-    const dashIdx  = fileName.indexOf(' - ');
-    const author   = dashIdx !== -1 ? fileName.slice(0, dashIdx) : 'Исполнитель';
-    const title    = dashIdx !== -1 ? fileName.slice(dashIdx + 3) : fileName;
-    return {
-      id: `track-${i}`,
-      url,
-      title,
-      author,
-      cover: `https://picsum.photos/id/${i + 10}/200/200`,
-      duration: '—',
-    };
-  });
 
-const PLAYLIST = buildPlaylist();
+const IconPrev = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+  </svg>
+);
+const IconNext = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M6 18l8.5-6L6 6v12zm2.5-6l5.5 3.9V8.1L8.5 12zM16 6h2v12h-2z"/>
+  </svg>
+);
+const IconPlay = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M8 5v14l11-7z"/>
+  </svg>
+);
+const IconPause = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+  </svg>
+);
 
 export const BlockMusic = () => {
-  const audioRef       = useRef<HTMLAudioElement | null>(null);
-  const progressBarRef = useRef<HTMLDivElement>(null);
-  const volumeBarRef   = useRef<HTMLDivElement>(null);
-  const pendingPlay    = useRef(false);
+  const { musicTracks } = useMedia();
 
-  const [currentId,   setCurrentId]   = useState<string | null>(null);
-  const [isPlaying,   setIsPlaying]   = useState(false);
-  const [isShuffle,   setIsShuffle]   = useState(false);
-  const [isRepeat,    setIsRepeat]    = useState(false);
-  const [progress,    setProgress]    = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration,    setDuration]    = useState(0);
-  const [volume,      setVolume]      = useState(0.7);
-  const [isDragging,      setIsDragging]      = useState(false);
-  const [isDraggingVolume,setIsDraggingVolume] = useState(false);
+  const playlist: Track[] = musicTracks.map(t => ({ ...t, duration: '—' }));
 
-  /* ── Create audio element once ──────────────── */
+  const audioRef        = useRef<HTMLAudioElement | null>(null);
+  const progressBarRef  = useRef<HTMLDivElement>(null);
+  const volumeBarRef    = useRef<HTMLDivElement>(null);
+  const pendingPlay     = useRef(false);
+  const playNextRef     = useRef<() => void>(() => {});
+
+  const [currentId,    setCurrentId]    = useState<string | null>(null);
+  const [isPlaying,    setIsPlaying]    = useState(false);
+  const [isShuffle,    setIsShuffle]    = useState(false);
+  const [isRepeat,     setIsRepeat]     = useState(false);
+  const [progress,     setProgress]     = useState(0);
+  const [currentTime,  setCurrentTime]  = useState(0);
+  const [duration,     setDuration]     = useState(0);
+  const [volume,       setVolume]       = useState(0.7);
+  const [isDragging,         setIsDragging]         = useState(false);
+  const [isDraggingVolume,   setIsDraggingVolume]   = useState(false);
+
+  /* ── Create audio element once ─────────────── */
   useEffect(() => {
-    const audio      = new Audio();
-    audio.volume     = volume;
-    audio.preload    = 'metadata';
-    audioRef.current = audio;
+    const audio       = new Audio();
+    audio.volume      = volume;
+    audio.preload     = 'metadata';
+    audioRef.current  = audio;
 
     const onTimeUpdate = () => {
-      if (!pendingPlay.current) {
-        setCurrentTime(audio.currentTime);
-        setProgress(audio.duration ? (audio.currentTime / audio.duration) * 100 : 0);
-      }
+      if (pendingPlay.current) return;
+      setCurrentTime(audio.currentTime);
+      setProgress(audio.duration ? (audio.currentTime / audio.duration) * 100 : 0);
     };
     const onDurationChange = () => setDuration(audio.duration || 0);
-    const onEnded = () => {
-      if (audio.loop) return;
-      playNext();
-    };
-    const onPlay  = () => setIsPlaying(true);
-    const onPause = () => setIsPlaying(false);
+    const onEnded          = () => { if (!audio.loop) playNextRef.current(); };
+    const onPlay           = () => setIsPlaying(true);
+    const onPause          = () => setIsPlaying(false);
 
     audio.addEventListener('timeupdate',     onTimeUpdate);
     audio.addEventListener('durationchange', onDurationChange);
@@ -107,13 +113,16 @@ export const BlockMusic = () => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const track = PLAYLIST.find(t => t.id === currentId);
+    const track = playlist.find(t => t.id === currentId);
     if (!track) return;
 
     audio.pause();
     audio.src = track.url;
     audio.load();
     pendingPlay.current = true;
+    setProgress(0);
+    setCurrentTime(0);
+    setDuration(0);
 
     const onCanPlay = () => {
       if (!pendingPlay.current) return;
@@ -128,7 +137,7 @@ export const BlockMusic = () => {
     };
   }, [currentId]);
 
-  /* ── Play / pause on isPlaying toggle ───────── */
+  /* ── Play / pause toggle ────────────────────── */
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !currentId || pendingPlay.current) return;
@@ -185,40 +194,33 @@ export const BlockMusic = () => {
 
   const playNext = useCallback(() => {
     setCurrentId(prev => {
-      if (!prev) return PLAYLIST[0].id;
-      const idx = PLAYLIST.findIndex(t => t.id === prev);
+      const idx  = playlist.findIndex(t => t.id === prev);
       const next = isShuffle
-        ? Math.floor(Math.random() * PLAYLIST.length)
-        : (idx + 1) % PLAYLIST.length;
-      return PLAYLIST[next].id;
+        ? Math.floor(Math.random() * playlist.length)
+        : (Math.max(0, idx) + 1) % playlist.length;
+      return playlist[next].id;
     });
     setIsPlaying(true);
-  }, [isShuffle]);
+  }, [isShuffle, playlist]);
 
   const playPrev = useCallback(() => {
     setCurrentId(prev => {
-      if (!prev) return PLAYLIST[0].id;
-      const idx = PLAYLIST.findIndex(t => t.id === prev);
-      const p   = (idx - 1 + PLAYLIST.length) % PLAYLIST.length;
-      return PLAYLIST[p].id;
+      const idx = playlist.findIndex(t => t.id === prev);
+      return playlist[(Math.max(0, idx) - 1 + playlist.length) % playlist.length].id;
     });
     setIsPlaying(true);
-  }, []);
+  }, [playlist]);
 
-  const fmt = (s: number) => {
-    if (!s || isNaN(s)) return '0:00';
-    const m = Math.floor(s / 60);
-    const sec = Math.floor(s % 60);
-    return `${m}:${sec < 10 ? '0' : ''}${sec}`;
-  };
+  /* ── Keep playNextRef in sync ───────────────── */
+  useEffect(() => { playNextRef.current = playNext; }, [playNext]);
 
-  const currentTrack = PLAYLIST.find(t => t.id === currentId) ?? null;
+  const currentTrack = playlist.find(t => t.id === currentId) ?? null;
 
   return (
     <div className="spotify-container">
       <div className="spotify-playlist">
         <div className="scroll-area">
-          {PLAYLIST.map((track, index) => {
+          {playlist.map((track, index) => {
             const isCurrent = currentId === track.id;
             return (
               <div
@@ -230,7 +232,7 @@ export const BlockMusic = () => {
                   {isCurrent ? (
                     isPlaying ? (
                       <div className="playing-animation">
-                        <span className="bar" /><span className="bar" /><span className="bar" /><span className="bar" />
+                        <span className="bar"/><span className="bar"/><span className="bar"/><span className="bar"/>
                       </div>
                     ) : (
                       <span className="orange-text" style={{ fontSize: '12px' }}>||</span>
@@ -277,14 +279,22 @@ export const BlockMusic = () => {
                 <path d="M10.9191 0V2.00139H8.91284C8.27808 2.00139 7.5772 2.28707 6.99101 2.83309C6.40485 3.3791 5.76785 4.18912 4.75652 5.52121C3.74064 6.85926 3.17491 7.66785 2.82211 8.03122C2.46931 8.39458 2.52606 8.3634 2.01258 8.3634H0V9.95391H2.01258C2.78349 9.95391 3.55888 9.65682 4.10692 9.09238C4.65497 8.52794 5.17223 7.74604 6.16891 6.43326C7.17015 5.11449 7.80669 4.33401 8.21655 3.95224C8.62639 3.57047 8.64403 3.59189 8.91288 3.59189H10.9192V5.68025L14 2.84053L10.9191 0ZM0 2.00137V3.59188H2.01258C2.52606 3.59188 2.46931 3.55988 2.82211 3.92324C3.0491 4.15702 3.42302 4.65282 3.88949 5.27766C3.95271 5.19404 3.98251 5.15373 4.04942 5.06558C4.30352 4.7309 4.53432 4.42893 4.74753 4.15353C4.82173 4.05768 4.88389 3.98208 4.95419 3.89258C4.63895 3.47265 4.3764 3.13961 4.10692 2.86207C3.55888 2.29762 2.78349 2.00137 2.01258 2.00137H0ZM10.9191 6.31977V8.36339H8.91284C8.64401 8.36339 8.62638 8.38399 8.21653 8.00222C7.94543 7.74969 7.56149 7.30204 7.05209 6.66022C6.99048 6.74079 6.94062 6.80456 6.87598 6.8897C6.51932 7.35948 6.27342 7.69841 6.01525 8.04943C6.38153 8.49667 6.69332 8.84407 6.99102 9.12135C7.57717 9.66739 8.27807 9.95388 8.91285 9.95388H10.9191V12L14 9.16031L10.9191 6.31977Z" />
               </svg>
             </button>
-            <button className="nav-btn" onClick={playPrev} title="Предыдущий">⏮</button>
+
+            <button className="nav-btn" onClick={playPrev} title="Предыдущий">
+              <IconPrev />
+            </button>
+
             <button
               className="play-circle"
-              onClick={() => currentId ? setIsPlaying(p => !p) : playTrack(PLAYLIST[0].id)}
+              onClick={() => currentId ? setIsPlaying(p => !p) : playTrack(playlist[0].id)}
             >
-              {isPlaying ? '⏸' : '▶'}
+              {isPlaying ? <IconPause /> : <IconPlay />}
             </button>
-            <button className="nav-btn" onClick={playNext} title="Следующий">⏭</button>
+
+            <button className="nav-btn" onClick={playNext} title="Следующий">
+              <IconNext />
+            </button>
+
             <button
               className={`btn-svg ${isRepeat ? 'orange' : 'white'}`}
               onClick={() => setIsRepeat(v => !v)}
@@ -318,10 +328,21 @@ export const BlockMusic = () => {
         <div className="player-right">
           <span
             onClick={() => setVolume(v => v > 0 ? 0 : 0.7)}
-            style={{ cursor: 'pointer', userSelect: 'none' }}
+            style={{ cursor: 'pointer', userSelect: 'none', color: '#ccc', display: 'flex' }}
             title="Звук"
           >
-            {volume === 0 ? '🔇' : '🔊'}
+            {volume === 0 ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+              </svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M15.54 8.46a5 5 0 010 7.07"/>
+                <path d="M19.07 4.93a10 10 0 010 14.14"/>
+              </svg>
+            )}
           </span>
           <div
             className="volume-bg"

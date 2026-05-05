@@ -230,9 +230,3 @@ $item-hover:   rgba(239, 108, 0, 0.07);
   }
 }
 
-// ── Responsive ───────────────────────────────
-@media (max-width: 600px) {
-  .wrapper { max-width: 100%; }
-  .field { height: 40px; }
-  .itemThumb { width: 36px; height: 36px; }
-}

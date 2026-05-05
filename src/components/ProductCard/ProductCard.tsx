@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import './ProductCard.css';
 import type { Product } from '../../types';
@@ -48,7 +49,7 @@ const ProductCard = ({ product }: Props) => {
         <p className="pc-name">{name}</p>
         <div className="pc-footer">
           <span className="pc-price">
-            {price.toLocaleString('ru-RU')}&thinsp;₽
+            {price.toLocaleString('ro-MD')}&thinsp;MDL
           </span>
           <button
             className={`pc-add${added ? ' pc-add--done' : ''}`}

@@ -1,0 +1,81 @@
+.cs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0 28px;
+}
+
+.cs__svg {
+  width: 100%;
+  max-width: 740px;
+  height: auto;
+  overflow: visible;
+}
+
+/* ── Orthodox cross — golden shimmer ── */
+.cs__cross {
+  opacity: 0.88;
+  filter: drop-shadow(0 0 10px rgba(228, 190, 72, 0.35));
+}
+
+/* ── Glory nimbus shimmer ── */
+.cs__nimbus {
+  animation: nimbusBreath 4s ease-in-out infinite;
+}
+
+@keyframes nimbusBreath {
+  0%, 100% { opacity: 0.18; }
+  50%       { opacity: 0.32; }
+}
+
+/* ════════════════════════════════════════════
+   FLAME — purely vertical flicker, no scaleX.
+   transform-box: fill-box + transform-origin: center bottom
+   → scales from wick base only, zero lateral drift
+════════════════════════════════════════════ */
+.fl-outer,
+.fl-inner {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+/* Steady burn — scaleY only, no horizontal drift */
+.fl-burn {
+  animation: flicker 2.8s ease-in-out infinite;
+}
+
+/* Ignition then steady burn */
+.fl-ignite {
+  animation:
+    ignite  0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+    flicker 2.8s ease-in-out 0.9s infinite;
+}
+
+/* Pure vertical breathing — no scaleX */
+@keyframes flicker {
+  0%,  100% { transform: scaleY(1);    opacity: 0.93; }
+  20%        { transform: scaleY(1.10); opacity: 1;    }
+  45%        { transform: scaleY(0.89); opacity: 0.84; }
+  70%        { transform: scaleY(1.07); opacity: 0.97; }
+}
+
+/* Ignition bloom */
+@keyframes ignite {
+  0%   { transform: scaleX(0.15) scaleY(0.05); opacity: 0;   }
+  35%  { transform: scaleX(1.2)  scaleY(1.35); opacity: 1;   }
+  65%  { transform: scaleX(1)    scaleY(0.92);               }
+  85%  { transform: scaleX(1)    scaleY(1.04);               }
+  100% { transform: scaleX(1)    scaleY(1);    opacity: 1;   }
+}
+
+/* ── Empty-state hint ── */
+.cs__hint {
+  font-size: 12px;
+  color: #444;
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 0.04em;
+  margin: 0;
+  font-style: italic;
+}
