@@ -1,44 +1,7 @@
 import { useState, type ReactElement } from 'react';
 import type { Notification } from '../../types/account';
+import { MOCK_NOTIFICATIONS } from '../../data/accountData';
 import styles from './Notifications.module.scss';
-
-const MOCK_NOTIFICATIONS: Notification[] = [
-  {
-    id: '1',
-    icon: 'delivery',
-    text: 'Ваш заказ #00387 отправлен и уже в пути к вам',
-    date: '2 часа назад',
-    isRead: false,
-  },
-  {
-    id: '2',
-    icon: 'order',
-    text: 'Заказ #00392 успешно оформлен и принят в обработку',
-    date: '1 день назад',
-    isRead: false,
-  },
-  {
-    id: '3',
-    icon: 'promo',
-    text: 'Пасхальная скидка 10% на все иконы! До 28 апреля',
-    date: '2 дня назад',
-    isRead: true,
-  },
-  {
-    id: '4',
-    icon: 'order',
-    text: 'Ваш заказ #00341 успешно доставлен',
-    date: '5 дней назад',
-    isRead: true,
-  },
-  {
-    id: '5',
-    icon: 'info',
-    text: 'Поступил новый товар: Мирра Иерусалимская',
-    date: '1 неделю назад',
-    isRead: true,
-  },
-];
 
 const IconMap: Record<Notification['icon'], ReactElement> = {
   order: (
