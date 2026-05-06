@@ -426,18 +426,13 @@
 }
 
 .priestAvatar {
-  width: 44px;
-  height: 44px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #5b9bd5, #3a6fa8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Arsenal', serif;
-  font-size: 20px;
-  font-weight: 700;
-  color: #fff;
+  object-fit: cover;
+  object-position: top;
   flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.08);
 }
 
 .priestInfo { flex: 1; min-width: 0; }
