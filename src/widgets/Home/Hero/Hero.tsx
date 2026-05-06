@@ -1,8 +1,7 @@
 import './Hero.css';
-import { eventsBase } from '../../../components/Home/CountdownTimer/holidays';
+import { eventsBase, type EventItem } from '../../../data/eventsData';
 import { CountdownTimer } from '../../../components/Home/CountdownTimer/CountdownTimer';
 import { Space } from '../../../components/common/Space/Space';
-import type { EventItem } from '../../../components/Home/CountdownTimer/holidays';
 
 // Возвращает ближайший праздник (type === 'holiday') — сегодняшний или следующий будущий
 const getNextEvent = (events: EventItem[]): EventItem | null => {
