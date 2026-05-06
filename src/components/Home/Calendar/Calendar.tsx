@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useMemo } from 'react';
 import './Calendar.css';
-import { eventsBase } from '../CountdownTimer/holidays';
-import type { EventItem } from '../CountdownTimer/holidays';
+import { eventsBase, type EventItem } from '../../../data/eventsData';
 
 type CalendarDay = {
     day: number;
