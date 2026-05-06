@@ -21,10 +21,9 @@ const STATUS_LABELS: Record<ServiceOrder['status'], string> = {
 
 /* ── Profile form ───────────────────────── */
 type ProfileForm = {
-  fullName:   string;
-  rank:       string;
-  experience: string;
-  bio:        string;
+  fullName: string;
+  rank:     string;
+  bio:      string;
 };
 
 const ProfileSection = ({
@@ -36,10 +35,9 @@ const ProfileSection = ({
 }) => {
   const updatePriest = useServicesStore((s) => s.updatePriest);
   const [form, setForm] = useState<ProfileForm>({
-    fullName:   priest?.name       ?? '',
-    rank:       priest?.rank       ?? '',
-    experience: String(priest?.experience ?? ''),
-    bio:        priest?.bio        ?? '',
+    fullName: priest?.name ?? '',
+    rank:     priest?.rank ?? '',
+    bio:      priest?.bio  ?? '',
   });
   const [saved, setSaved] = useState(false);
 
@@ -51,10 +49,9 @@ const ProfileSection = ({
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     updatePriest(priestId, {
-      name:       form.fullName,
-      rank:       form.rank,
-      experience: Number(form.experience) || 0,
-      bio:        form.bio,
+      name:     form.fullName,
+      rank:     form.rank,
+      bio:      form.bio,
       schedule,
     });
     setSaved(true);
@@ -106,18 +103,6 @@ const ProfileSection = ({
               value={form.rank}
               onChange={(e) => setForm((f) => ({ ...f, rank: e.target.value }))}
               placeholder="Иерей, Протоиерей…"
-              required
-            />
-          </div>
-          <div className={styles.fieldSmall}>
-            <label className={styles.label}>Стаж (лет)</label>
-            <input
-              className={styles.input}
-              type="number"
-              min={0}
-              max={99}
-              value={form.experience}
-              onChange={(e) => setForm((f) => ({ ...f, experience: e.target.value }))}
               required
             />
           </div>
@@ -269,10 +254,6 @@ export default function PriestCabinet() {
               <h1 className={styles.pageTitle}>
                 {priestData?.rank ?? 'Батюшка'}&nbsp;{user?.name ?? ''}&nbsp;{user?.lastName ?? ''}
               </h1>
-              <p className={styles.pageSubtitle}>
-                Стаж {priestData?.experience ?? '—'} {pluralYears(priestData?.experience ?? 0)} · Рейтинг&nbsp;
-                <span className={styles.rating}>★ {priestData?.rating ?? '—'}</span>
-              </p>
             </div>
           </div>
           {pendingCount > 0 && (
@@ -328,10 +309,3 @@ export default function PriestCabinet() {
   );
 }
 
-function pluralYears(n: number) {
-  if (n % 100 >= 11 && n % 100 <= 19) return 'лет';
-  const r = n % 10;
-  if (r === 1) return 'год';
-  if (r >= 2 && r <= 4) return 'года';
-  return 'лет';
-}
