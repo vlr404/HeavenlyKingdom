@@ -1,4 +1,5 @@
 import type { ActiveOrder, ActiveOrderStatus } from '../../types/account';
+import { MOCK_ACTIVE } from '../../data/accountData';
 import styles from './CurrentOrders.module.scss';
 
 const ORDER_STEPS = ['Оформлен', 'Собран', 'Отправлен', 'Доставлен'];
@@ -24,47 +25,6 @@ const STATUS_COLOR: Record<ActiveOrderStatus, string> = {
   delivering: '#4caf50',
 };
 
-const MOCK_ACTIVE: ActiveOrder[] = [
-  {
-    id: '1',
-    number: '00387',
-    date: '18 апреля 2026',
-    items: [
-      {
-        id: 4,
-        name: 'Четки из оливкового дерева',
-        price: 560,
-        qty: 1,
-        img: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400&h=400&fit=crop',
-      },
-      {
-        id: 7,
-        name: 'Ладан афонский',
-        price: 340,
-        qty: 2,
-        img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop',
-      },
-    ],
-    total: 1240,
-    status: 'shipped',
-  },
-  {
-    id: '2',
-    number: '00392',
-    date: '20 апреля 2026',
-    items: [
-      {
-        id: 8,
-        name: 'Псалтирь с толкованием',
-        price: 890,
-        qty: 1,
-        img: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=400&fit=crop',
-      },
-    ],
-    total: 890,
-    status: 'placed',
-  },
-];
 
 const CurrentOrders = () => {
   return (

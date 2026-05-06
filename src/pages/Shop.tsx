@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import ProductCard from '../components/ProductCard/ProductCard';
 import { useSearch } from '../context/SearchContext';
 import { SHOP_PRODUCTS } from '../data/shopData';
+import { SHOP_CATEGORIES } from '../data/categoryData';
 import styles from './Shop.module.scss';
 
 const CATEGORY_ICONS: Record<string, ReactElement> = {
@@ -50,7 +51,7 @@ const CATEGORY_ICONS: Record<string, ReactElement> = {
   ),
 };
 
-const categories = ['Все', ...Array.from(new Set(SHOP_PRODUCTS.map((p) => p.cat)))];
+const categories = ['Все', ...SHOP_CATEGORIES];
 
 type SortKey = 'default' | 'price_asc' | 'price_desc' | 'name_asc';
 
@@ -78,7 +79,7 @@ export default function Shop() {
 
   useEffect(() => {
     const html = document.documentElement;
-    html.style.scrollSnapType = 'y proximity';
+    html.style.scrollSnapType = 'y mandatory';
     if (landingRef.current)  landingRef.current.style.scrollSnapAlign  = 'start';
     if (catalogRef.current)  catalogRef.current.style.scrollSnapAlign  = 'start';
     return () => {
@@ -192,6 +193,22 @@ export default function Shop() {
                 </svg>
                 <span className={styles.indulgenceCardText}>Индульгенции</span>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className={styles.indulgenceCardArrow}>
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </button>
+            </li>
+            {/* ── Spiritual services entry card ── */}
+            <li>
+              <button className={styles.servicesCard} onClick={() => navigate('/services')}>
+                <span className={styles.servicesCardGlow} aria-hidden="true" />
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" className={styles.servicesCardIcon}>
+                  <path d="M12 2L12 6"/>
+                  <path d="M8 4 L16 4"/>
+                  <path d="M5 8 C5 8 4 10 4 13 C4 18 7.5 21 12 21 C16.5 21 20 18 20 13 C20 10 19 8 19 8 Z"/>
+                  <path d="M9 14 L12 11 L15 14"/>
+                </svg>
+                <span className={styles.servicesCardText}>Духовные требы</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className={styles.servicesCardArrow}>
                   <polyline points="9 18 15 12 9 6"/>
                 </svg>
               </button>

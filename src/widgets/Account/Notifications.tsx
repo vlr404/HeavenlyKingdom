@@ -1,46 +1,9 @@
-import { useState } from 'react';
+import { useState, type ReactElement } from 'react';
 import type { Notification } from '../../types/account';
+import { MOCK_NOTIFICATIONS } from '../../data/accountData';
 import styles from './Notifications.module.scss';
 
-const MOCK_NOTIFICATIONS: Notification[] = [
-  {
-    id: '1',
-    icon: 'delivery',
-    text: 'Ваш заказ #00387 отправлен и уже в пути к вам',
-    date: '2 часа назад',
-    isRead: false,
-  },
-  {
-    id: '2',
-    icon: 'order',
-    text: 'Заказ #00392 успешно оформлен и принят в обработку',
-    date: '1 день назад',
-    isRead: false,
-  },
-  {
-    id: '3',
-    icon: 'promo',
-    text: 'Пасхальная скидка 10% на все иконы! До 28 апреля',
-    date: '2 дня назад',
-    isRead: true,
-  },
-  {
-    id: '4',
-    icon: 'order',
-    text: 'Ваш заказ #00341 успешно доставлен',
-    date: '5 дней назад',
-    isRead: true,
-  },
-  {
-    id: '5',
-    icon: 'info',
-    text: 'Поступил новый товар: Мирра Иерусалимская',
-    date: '1 неделю назад',
-    isRead: true,
-  },
-];
-
-const IconMap: Record<Notification['icon'], JSX.Element> = {
+const IconMap: Record<Notification['icon'], ReactElement> = {
   order: (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
       <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z" />
