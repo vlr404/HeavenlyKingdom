@@ -1,38 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FavoriteProduct } from '../../types/account';
+import { MOCK_FAVORITES } from '../../data/accountData';
 import styles from './Favorites.module.scss';
-
-const MOCK_FAVORITES: FavoriteProduct[] = [
-  {
-    id: 3,
-    name: 'Икона Богородицы',
-    price: 2100,
-    img: 'https://upload.wikimedia.org/wikipedia/commons/9/9a/%D0%95%D0%BB%D0%B5%D1%86%D0%BA%D0%B0%D1%8F-%D0%A7%D0%B5%D1%80%D0%BD%D0%B8%D0%B3%D0%BE%D0%B2%D1%81%D0%BA%D0%B0%D1%8F_%D0%B8%D0%BA%D0%BE%D0%BD%D0%B0_%D0%91%D0%BE%D0%B6%D0%B8%D0%B5%D0%B9_%D0%9C%D0%B0%D1%82%D0%B5%D1%80%D0%B8.jpg',
-    cat: 'Иконы',
-  },
-  {
-    id: 1,
-    name: 'Библия в кожаном переплёте',
-    price: 1290,
-    img: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&h=400&fit=crop',
-    cat: 'Книги',
-  },
-  {
-    id: 4,
-    name: 'Четки из оливкового дерева',
-    price: 560,
-    img: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400&h=400&fit=crop',
-    cat: 'Аксессуары',
-  },
-  {
-    id: 8,
-    name: 'Псалтирь с толкованием',
-    price: 890,
-    img: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=400&fit=crop',
-    cat: 'Книги',
-  },
-];
 
 const HeartIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
