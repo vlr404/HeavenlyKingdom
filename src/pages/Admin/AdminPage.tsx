@@ -9,6 +9,7 @@ import type {
 } from '../../types/admin';
 import type { CeremonyItem, MusicTrack } from '../../types/media';
 import { SHOP_PRODUCTS } from '../../data/shopData';
+import { SHOP_CATEGORIES } from '../../data/categoryData';
 import { StatsPanel } from './sections/StatsPanel';
 import { HolidayManager } from './sections/HolidayManager';
 import { DonationWidget } from './sections/DonationWidget';
@@ -86,8 +87,7 @@ const initialHolidays = (): Holiday[] => {
 const initialProducts = (): AdminProduct[] =>
   SHOP_PRODUCTS.map((p) => ({ ...p, onSale: false }));
 
-const initialCategories = (): string[] =>
-  Array.from(new Set(SHOP_PRODUCTS.map((p) => p.cat)));
+const initialCategories = (): string[] => [...SHOP_CATEGORIES];
 
 const initialGoal: DonationGoal = {
   id: 1,
