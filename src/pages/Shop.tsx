@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import ProductCard from '../components/ProductCard/ProductCard';
 import { useSearch } from '../context/SearchContext';
 import { SHOP_PRODUCTS } from '../data/shopData';
+import { SHOP_CATEGORIES } from '../data/categoryData';
 import styles from './Shop.module.scss';
 
 const CATEGORY_ICONS: Record<string, ReactElement> = {
@@ -50,7 +51,7 @@ const CATEGORY_ICONS: Record<string, ReactElement> = {
   ),
 };
 
-const categories = ['Все', ...Array.from(new Set(SHOP_PRODUCTS.map((p) => p.cat)))];
+const categories = ['Все', ...SHOP_CATEGORIES];
 
 type SortKey = 'default' | 'price_asc' | 'price_desc' | 'name_asc';
 
