@@ -29,7 +29,7 @@ const PriestGuard = ({ children }: { children: React.ReactNode }) => {
 
 function App() {
   return (
-    <Router basename="/HeavenlyKing">
+    <Router basename="/HeavenlyKing/">
       <MediaProvider>
       <SearchProvider>
         <div className="App">
