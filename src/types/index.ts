@@ -6,3 +6,13 @@ export interface Product {
   img: string
   isNew?: boolean
 }
+
+export interface Father {
+  id: number
+  name: string
+  rank: string
+  img: string
+  socials: { instagram?: string, facebook?: string, youtube?: string, telegram?: string, gmail?: string }
+  bio: string
+  schedule?: { date: string, times: string[] }[]
+}

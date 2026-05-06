@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import './CountdownTimer.css';
-import type { EventPoster } from './holidays';
+import type { EventPoster } from '../../../data/eventsData';
 
 type TimeLeft = {
     days: number;

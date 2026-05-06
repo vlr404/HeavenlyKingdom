@@ -1,16 +1,8 @@
 import { useState, useEffect } from 'react';
-import type { Holiday } from '../../types/holiday';
 import { useCountdown } from '../../hooks/useCountdown';
 import styles from './HolidayTimer.module.css';
 import '../../styles/tokens.module.css';
-
-const HOLIDAYS: Holiday[] = [
-  { id: 1, name: 'День Независимости', date: new Date(new Date().getFullYear(), 7, 27) },
-  { id: 2, name: 'Рождество Христово', date: new Date(new Date().getFullYear(), 11, 25) },
-  { id: 3, name: 'Новый год',          date: new Date(new Date().getFullYear() + 1, 0, 1) },
-  { id: 4, name: 'День Победы',        date: new Date(new Date().getFullYear(), 4, 9) },
-  { id: 5, name: 'Пасха',              date: new Date(new Date().getFullYear(), 3, 20) },
-];
+import { HOLIDAYS } from '../../data/holidaysData';
 
 export const HolidayTimer = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);

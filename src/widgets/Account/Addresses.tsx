@@ -1,25 +1,7 @@
 import { useState } from 'react';
 import type { Address } from '../../types/account';
+import { MOCK_ADDRESSES } from '../../data/accountData';
 import styles from './Addresses.module.scss';
-
-const MOCK_ADDRESSES: Address[] = [
-  {
-    id: '1',
-    city: 'Москва',
-    street: 'ул. Тверская',
-    house: '15',
-    apartment: '42',
-    isDefault: true,
-  },
-  {
-    id: '2',
-    city: 'Санкт-Петербург',
-    street: 'Невский пр-т',
-    house: '88',
-    apartment: '12',
-    isDefault: false,
-  },
-];
 
 const emptyForm = { city: '', street: '', house: '', apartment: '' };
 

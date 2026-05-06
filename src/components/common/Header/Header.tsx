@@ -160,6 +160,18 @@ export const Header = () => {
                   <span className={styles.breadCurrent}>Корзина</span>
                 </>
               )}
+              {location.pathname.startsWith('/priest-cabinet') && (
+                <>
+                  <span className={styles.breadSep}>›</span>
+                  <span className={styles.breadCurrent}>Кабинет батюшки</span>
+                </>
+              )}
+              {location.pathname.startsWith('/services') && (
+                <>
+                  <span className={styles.breadSep}>›</span>
+                  <span className={styles.breadCurrent}>Духовные требы</span>
+                </>
+              )}
             </nav>
             <IconsCluster />
           </>
