@@ -5,6 +5,8 @@ import ProductCard from '../components/ProductCard/ProductCard';
 import { useSearch } from '../context/SearchContext';
 import { SHOP_PRODUCTS } from '../data/shopData';
 import { SHOP_CATEGORIES } from '../data/categoryData';
+import { api } from '../api/client';
+import type { Product } from '../types';
 import styles from './Shop.module.scss';
 
 const CATEGORY_ICONS: Record<string, ReactElement> = {
@@ -70,8 +72,13 @@ export default function Shop() {
   const [sortOpen, setSortOpen]             = useState(false);
   const [minPrice, setMinPrice]             = useState('');
   const [maxPrice, setMaxPrice]             = useState('');
+  const [products, setProducts]             = useState<Product[]>(SHOP_PRODUCTS);
   const catalogRef = useRef<HTMLElement>(null);
   const landingRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    api.get<Product[]>('/product').then(setProducts).catch(() => {/* fallback to static */});
+  }, []);
 
   useEffect(() => {
     setResults(null);
@@ -103,8 +110,8 @@ export default function Shop() {
     let list = isSearching
       ? results
       : activeCategory === 'Все'
-        ? SHOP_PRODUCTS
-        : SHOP_PRODUCTS.filter((p) => p.cat === activeCategory);
+        ? products
+        : products.filter((p) => p.cat === activeCategory);
 
     const min = minPrice !== '' ? Number(minPrice) : null;
     const max = maxPrice !== '' ? Number(maxPrice) : null;
