@@ -2,9 +2,21 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../entity/auth/authStore';
 import BackButton from '../components/common/BackButton/BackButton';
+import { api } from '../api/client';
 import styles from './Auth.module.scss';
 
 type Tab = 'login' | 'register';
+
+interface UserResponseDto {
+  id: number;
+  name: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  avatar: string;
+  isAdmin: boolean;
+  isFather: boolean;
+}
 
 const Auth = () => {
   const [tab, setTab] = useState<Tab>('login');
@@ -19,42 +31,73 @@ const Auth = () => {
     confirm: '',
   });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const switchTab = (t: Tab) => {
     setTab(t);
     setError('');
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    const isAdmin = loginForm.email === 'admin@admin.com' && loginForm.password === 'admin';
-    login({
-      id: isAdmin ? 'admin' : '1',
-      name: isAdmin ? 'Администратор' : 'Николай',
-      lastName: isAdmin ? '' : 'Иванов',
-      email: loginForm.email,
-      phone: '',
-      isAdmin,
-    });
-    navigate(isAdmin ? '/admin' : '/account');
+    setLoading(true);
+    try {
+      const data = await api.post<UserResponseDto>('/user/login', {
+        email: loginForm.email,
+        password: loginForm.password,
+      });
+      login({
+        id: String(data.id),
+        name: data.name,
+        lastName: data.lastName,
+        email: data.email,
+        phone: data.phone,
+        avatar: data.avatar || undefined,
+        isAdmin: data.isAdmin,
+        isFather: data.isFather,
+      });
+      navigate(data.isAdmin ? '/admin' : data.isFather ? '/priest-cabinet' : '/account');
+    } catch (err: unknown) {
+      const e = err as { status?: number; message?: string };
+      setError(e.status === 401 ? 'Неверный email или пароль' : 'Ошибка сервера');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     if (registerForm.password !== registerForm.confirm) {
       setError('Пароли не совпадают');
       return;
     }
-    login({
-      id: String(Date.now()),
-      name: registerForm.name,
-      lastName: '',
-      email: registerForm.email,
-      phone: '',
-    });
-    navigate('/account');
+    setLoading(true);
+    try {
+      const data = await api.post<UserResponseDto>('/user/register', {
+        name: registerForm.name,
+        lastName: '',
+        email: registerForm.email,
+        password: registerForm.password,
+        username: registerForm.email,
+      });
+      login({
+        id: String(data.id),
+        name: data.name,
+        lastName: data.lastName,
+        email: data.email,
+        phone: data.phone,
+        isAdmin: data.isAdmin,
+        isFather: data.isFather,
+      });
+      navigate('/account');
+    } catch (err: unknown) {
+      const e = err as { status?: number };
+      setError(e.status === 409 ? 'Этот email уже занят' : 'Ошибка регистрации');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -107,8 +150,8 @@ const Auth = () => {
               />
             </div>
             {error && <p className={styles.error}>{error}</p>}
-            <button type="submit" className={styles.submitBtn}>
-              Войти
+            <button type="submit" className={styles.submitBtn} disabled={loading}>
+              {loading ? 'Входим…' : 'Войти'}
             </button>
           </form>
         ) : (
@@ -158,8 +201,8 @@ const Auth = () => {
               />
             </div>
             {error && <p className={styles.error}>{error}</p>}
-            <button type="submit" className={styles.submitBtn}>
-              Зарегистрироваться
+            <button type="submit" className={styles.submitBtn} disabled={loading}>
+              {loading ? 'Регистрация…' : 'Зарегистрироваться'}
             </button>
           </form>
         )}

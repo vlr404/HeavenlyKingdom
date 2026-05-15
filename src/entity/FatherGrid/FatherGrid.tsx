@@ -1,60 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './FatherGrid.css';
 import { SocialMediaIcon } from '../../components/common/SocialMediaIcon/SocialMediaIcon';
-import type { SocialPlatform } from '../../components/common/SocialMediaIcon/SocialMediaIcon';
+import { FATHERS_DATA } from '../../data/fatherData';
+import { api } from '../../api/client';
 
-type Father = {
-    id: number;
-    name: string;
-    san: string;
-    img: string;
-    socials: Partial<Record<SocialPlatform, string>>;
-};
-
-const fathers: Father[] = [
-    {
-        id: 1,
-        name: "УОЛТЕР",
-        san: "Монах",
-        img: "foto/Walter_White.png",
-        socials: { instagram: "link", telegram: "link", youtube: "link" },
-    },
-    {
-        id: 2,
-        name: "ДЖЕССИ",
-        san: "Иерей",
-        img: "foto/Jesse_Pinkman.png",
-        socials: { telegram: "link", facebook: "link" },
-    },
-    {
-        id: 3,
-        name: "СОЛ",
-        san: "Диакон",
-        img: "foto/Saul_Goodman.png",
-        socials: { gmail: "mailto:saul@gmail.com" },
-    },
-    {
-        id: 4,
-        name: "ГУСТАВО",
-        san: "Протоиерей",
-        img: "foto/Gustavo_Fring.png",
-        socials: { instagram: "link", facebook: "link", youtube: "link", telegram: "link" },
-    },
-    {
-        id: 5,
-        name: "СЕРГИЙ",
-        san: "Настоятель",
-        img: "foto/Gustavo_Fring.png",
-        socials: { instagram: "l", facebook: "l", gmail: "l", youtube: "l", telegram: "l" },
-    },
-    {
-        id: 6,
-        name: "АНДРЕЙ",
-        san: "Архимандрит",
-        img: "foto/Jesse_Pinkman.png",
-        socials: {},
-    },
-];
+interface FatherDto {
+  id: number;
+  name: string;
+  san: string;
+  img: string;
+  instagram?: string;
+  telegram?: string;
+  youtube?: string;
+  facebook?: string;
+  gmail?: string;
+}
 
 const VISIBLE_CARDS = 4;
 const CARD_WIDTH    = 250;
@@ -62,54 +22,61 @@ const GAP           = 30;
 const STEP          = CARD_WIDTH + GAP;
 
 export const FatherGrid = () => {
-    const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [fathers, setFathers] = useState(() =>
+    FATHERS_DATA.map(f => ({
+      id: f.id,
+      name: f.name,
+      san: f.rank,
+      img: f.img,
+      instagram: f.socials.instagram,
+      telegram: f.socials.telegram,
+      youtube: f.socials.youtube,
+      facebook: f.socials.facebook,
+      gmail: f.socials.gmail,
+    }))
+  );
 
-    const count      = fathers.length;
-    const isCentered = count < VISIBLE_CARDS;
-    const isFirst    = currentIndex === 0;
-    const isLast     = currentIndex >= count - VISIBLE_CARDS;
+  useEffect(() => {
+    api.get<FatherDto[]>('/father')
+      .then(data => { if (data.length > 0) setFathers(data); })
+      .catch(() => {/* fallback to static */});
+  }, []);
 
-    const nextSlide = () => {
-        if (!isLast) setCurrentIndex(prev => prev + 1);
-    };
+  const count      = fathers.length;
+  const isCentered = count < VISIBLE_CARDS;
+  const isFirst    = currentIndex === 0;
+  const isLast     = currentIndex >= count - VISIBLE_CARDS;
 
-    const prevSlide = () => {
-        if (!isFirst) setCurrentIndex(prev => prev - 1);
-    };
+  return (
+    <div className="father-slider-layout">
+      <button className={`slider-arrow left ${isFirst ? 'hidden' : ''}`} onClick={() => !isFirst && setCurrentIndex(p => p - 1)}>‹</button>
 
-    return (
-        <div className="father-slider-layout">
-            <button
-                className={`slider-arrow left ${isFirst ? 'hidden' : ''}`}
-                onClick={prevSlide}
-            >
-                ‹
-            </button>
-
-            <div className="father-slider-viewport">
-                <div
-                    className={`father-slider-track ${isCentered ? 'father-slider-track-cent' : ''}`}
-                    style={{ transform: `translateX(-${currentIndex * STEP}px)` }}
-                >
-                    {fathers.map((father) => (
-                        <div key={father.id} className="father-card">
-                            <div className="father-grid__image">
-                                <img src={father.img} alt={father.name} />
-                                <SocialMediaIcon links={father.socials} wrap="y" />
-                            </div>
-                            <div className="father-grid__name">ОТЕЦ <br />{father.name}</div>
-                            <div className="father-grid__san">{father.san}</div>
-                        </div>
-                    ))}
-                </div>
+      <div className="father-slider-viewport">
+        <div
+          className={`father-slider-track ${isCentered ? 'father-slider-track-cent' : ''}`}
+          style={{ transform: `translateX(-${currentIndex * STEP}px)` }}
+        >
+          {fathers.map((father) => (
+            <div key={father.id} className="father-card">
+              <div className="father-grid__image">
+                <img src={father.img} alt={father.name} />
+                <SocialMediaIcon links={{
+                  instagram: father.instagram,
+                  telegram: father.telegram,
+                  youtube: father.youtube,
+                  facebook: father.facebook,
+                  gmail: father.gmail,
+                }} wrap="y" />
+              </div>
+              <div className="father-grid__name">ОТЕЦ <br />{father.name.toUpperCase()}</div>
+              <div className="father-grid__san">{father.san}</div>
             </div>
-
-            <button
-                className={`slider-arrow right ${isLast ? 'hidden' : ''}`}
-                onClick={nextSlide}
-            >
-                ›
-            </button>
+          ))}
         </div>
-    );
+      </div>
+
+      <button className={`slider-arrow right ${isLast ? 'hidden' : ''}`} onClick={() => !isLast && setCurrentIndex(p => p + 1)}>›</button>
+    </div>
+  );
 };

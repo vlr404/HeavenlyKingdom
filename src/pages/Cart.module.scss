@@ -187,3 +187,88 @@ $border: rgba(239, 108, 0, 0.2);
     box-shadow: 0 8px 20px rgba(239, 108, 0, 0.3);
   }
 }
+
+.addressPickerTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: $muted;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.addressOption {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  background: none;
+  border: 1px solid $border;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  color: $text;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+  transition: border-color 0.2s;
+
+  &:hover { border-color: $accent; }
+}
+
+.addressOptionSelected {
+  border-color: $accent;
+  background: rgba(239, 108, 0, 0.06);
+}
+
+.noAddressMsg {
+  font-size: 12px;
+  color: $muted;
+  margin-bottom: 12px;
+
+  a { color: $accent; text-decoration: none; &:hover { text-decoration: underline; } }
+}
+
+.confirmBtn {
+  width: 100%;
+  padding: 14px;
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.2s;
+  margin-top: 4px;
+
+  &:hover:not(:disabled) { transform: translateY(-2px); }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.cancelCheckoutBtn {
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: 1px solid $border;
+  border-radius: 6px;
+  color: $muted;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: color 0.2s;
+
+  &:hover { color: $text; }
+}
+
+.successMsg {
+  text-align: center;
+  padding: 12px 0 4px;
+  color: #4caf50;
+  font-size: 13px;
+  font-weight: 600;
+}

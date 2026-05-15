@@ -1,38 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { FavoriteProduct } from '../../types/account';
+import { useAuthStore } from '../../entity/auth/authStore';
+import { useCartStore } from '../../entity/cart/cartStore';
+import { api } from '../../api/client';
 import styles from './Favorites.module.scss';
 
-const MOCK_FAVORITES: FavoriteProduct[] = [
-  {
-    id: 3,
-    name: 'Икона Богородицы',
-    price: 2100,
-    img: 'https://upload.wikimedia.org/wikipedia/commons/9/9a/%D0%95%D0%BB%D0%B5%D1%86%D0%BA%D0%B0%D1%8F-%D0%A7%D0%B5%D1%80%D0%BD%D0%B8%D0%B3%D0%BE%D0%B2%D1%81%D0%BA%D0%B0%D1%8F_%D0%B8%D0%BA%D0%BE%D0%BD%D0%B0_%D0%91%D0%BE%D0%B6%D0%B8%D0%B5%D0%B9_%D0%9C%D0%B0%D1%82%D0%B5%D1%80%D0%B8.jpg',
-    cat: 'Иконы',
-  },
-  {
-    id: 1,
-    name: 'Библия в кожаном переплёте',
-    price: 1290,
-    img: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&h=400&fit=crop',
-    cat: 'Книги',
-  },
-  {
-    id: 4,
-    name: 'Четки из оливкового дерева',
-    price: 560,
-    img: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400&h=400&fit=crop',
-    cat: 'Аксессуары',
-  },
-  {
-    id: 8,
-    name: 'Псалтирь с толкованием',
-    price: 890,
-    img: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=400&fit=crop',
-    cat: 'Книги',
-  },
-];
+interface FavoriteDto { id: number; productId: number; productName: string; productImg: string; productPrice: number; productCat: string; }
 
 const HeartIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -41,26 +14,38 @@ const HeartIcon = () => (
 );
 
 const Favorites = () => {
-  const [favorites, setFavorites] = useState<FavoriteProduct[]>(MOCK_FAVORITES);
+  const isAuthenticated = useAuthStore(s => s.isAuthenticated);
+  const { addItem } = useCartStore();
+  const [favorites, setFavorites] = useState<FavoriteDto[]>([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const remove = (id: number) => {
-    setFavorites((prev) => prev.filter((p) => p.id !== id));
+  useEffect(() => {
+    if (!isAuthenticated) { setLoading(false); return; }
+    api.get<FavoriteDto[]>('/favorites')
+      .then(setFavorites)
+      .catch(() => setFavorites([]))
+      .finally(() => setLoading(false));
+  }, [isAuthenticated]);
+
+  const remove = async (productId: number) => {
+    try {
+      await api.delete(`/favorites/${productId}`);
+      setFavorites(prev => prev.filter(f => f.productId !== productId));
+    } catch { /* ignore */ }
   };
+
+  if (loading) return <div className={styles.container}><h2 className={styles.title}>Избранное</h2><div className={styles.empty}><p>Загрузка…</p></div></div>;
 
   if (favorites.length === 0) {
     return (
       <div className={styles.container}>
         <h2 className={styles.title}>Избранное</h2>
         <div className={styles.empty}>
-          <div className={styles.emptyIcon}>
-            <HeartIcon />
-          </div>
+          <div className={styles.emptyIcon}><HeartIcon /></div>
           <p className={styles.emptyText}>Список избранного пуст</p>
           <p className={styles.emptyHint}>Добавляйте понравившиеся товары, нажимая на сердечко</p>
-          <button className={styles.catalogBtn} onClick={() => navigate('/shop')}>
-            Перейти в каталог
-          </button>
+          <button className={styles.catalogBtn} onClick={() => navigate('/shop')}>Перейти в каталог</button>
         </div>
       </div>
     );
@@ -70,28 +55,23 @@ const Favorites = () => {
     <div className={styles.container}>
       <h2 className={styles.title}>Избранное</h2>
       <p className={styles.count}>{favorites.length} товара</p>
-
       <div className={styles.grid}>
-        {favorites.map((product) => (
-          <div key={product.id} className={styles.card}>
+        {favorites.map((f) => (
+          <div key={f.id} className={styles.card}>
             <div className={styles.imageWrap}>
-              <img src={product.img} alt={product.name} className={styles.image} />
-              <button
-                className={styles.removeBtn}
-                onClick={() => remove(product.id)}
-                title="Убрать из избранного"
-              >
+              <img src={f.productImg} alt={f.productName} className={styles.image} />
+              <button className={styles.removeBtn} onClick={() => remove(f.productId)} title="Убрать из избранного">
                 <HeartIcon />
               </button>
             </div>
             <div className={styles.cardBody}>
-              <span className={styles.cat}>{product.cat}</span>
-              <span className={styles.name}>{product.name}</span>
+              <span className={styles.cat}>{f.productCat}</span>
+              <span className={styles.name}>{f.productName}</span>
               <div className={styles.cardFooter}>
-                <span className={styles.price}>
-                  {product.price.toLocaleString('ro-MD')} MDL
-                </span>
-                <button className={styles.addBtn}>В корзину</button>
+                <span className={styles.price}>{f.productPrice.toLocaleString('ro-MD')} MDL</span>
+                <button className={styles.addBtn} onClick={() => addItem({ id: f.productId, name: f.productName, price: f.productPrice, cat: f.productCat, img: f.productImg })}>
+                  В корзину
+                </button>
               </div>
             </div>
           </div>

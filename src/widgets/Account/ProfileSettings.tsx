@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { useAuthStore } from '../../entity/auth/authStore';
+import { api } from '../../api/client';
 import styles from './ProfileSettings.module.scss';
 
 const ProfileSettings = () => {
@@ -13,8 +14,14 @@ const ProfileSettings = () => {
   });
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const handleSave = () => {
-    updateUser(form);
+  const handleSave = async () => {
+    try {
+      const updated = await api.put<{ name: string; lastName: string; phone: string }>(
+        '/user/me',
+        { name: form.name, lastName: form.lastName, phone: form.phone },
+      );
+      updateUser({ name: updated.name, lastName: updated.lastName, phone: updated.phone });
+    } catch { /* ignore */ }
     setIsEditing(false);
   };
 

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import './AdminPage.css';
 import type { Holiday } from '../../types/holiday';
 import type {
@@ -9,6 +9,8 @@ import type {
 } from '../../types/admin';
 import type { CeremonyItem, MusicTrack } from '../../types/media';
 import { SHOP_PRODUCTS } from '../../data/shopData';
+import { SHOP_CATEGORIES } from '../../data/categoryData';
+import { api } from '../../api/client';
 import { StatsPanel } from './sections/StatsPanel';
 import { HolidayManager } from './sections/HolidayManager';
 import { DonationWidget } from './sections/DonationWidget';
@@ -86,8 +88,7 @@ const initialHolidays = (): Holiday[] => {
 const initialProducts = (): AdminProduct[] =>
   SHOP_PRODUCTS.map((p) => ({ ...p, onSale: false }));
 
-const initialCategories = (): string[] =>
-  Array.from(new Set(SHOP_PRODUCTS.map((p) => p.cat)));
+const initialCategories = (): string[] => [...SHOP_CATEGORIES];
 
 const initialGoal: DonationGoal = {
   id: 1,
@@ -101,6 +102,12 @@ const AdminPage = () => {
   const [holidays, setHolidays] = useState<Holiday[]>(initialHolidays);
   const [products, setProducts] = useState<AdminProduct[]>(initialProducts);
   const [categories, setCategories] = useState<string[]>(initialCategories);
+
+  useEffect(() => {
+    api.get<(AdminProduct & { isOnSale?: boolean })[]>('/product')
+      .then(data => setProducts(data.map(p => ({ ...p, onSale: p.isOnSale ?? p.onSale ?? false }))))
+      .catch(() => { /* keep static fallback */ });
+  }, []);
   const [goal, setGoal] = useState<DonationGoal>(initialGoal);
 
   const { ceremonyItems, setCeremonyItems, musicTracks, setMusicTracks, videoUrls, setVideoUrls } = useMedia();
