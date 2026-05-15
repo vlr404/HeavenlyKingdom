@@ -11,6 +11,7 @@ export interface User {
   phone: string;
   avatar?: string;
   isAdmin?: boolean;
+  isFather?: boolean;
   role?: UserRole;
 }
 
@@ -23,7 +24,7 @@ interface AuthStore {
 }
 
 function resolveRole(user: User): UserRole {
-  if (user.email === 'priest@test.com') return 'PRIEST';
+  if (user.isFather) return 'PRIEST';
   if (user.isAdmin) return 'ADMIN';
   return 'USER';
 }
