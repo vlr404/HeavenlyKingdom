@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { FavoriteProduct } from '../../types/account';
-import { MOCK_FAVORITES } from '../../data/accountData';
+import { useAuthStore } from '../../entity/auth/authStore';
+import { useCartStore } from '../../entity/cart/cartStore';
+import { api } from '../../api/client';
 import styles from './Favorites.module.scss';
+
+interface FavoriteDto { id: number; productId: number; productName: string; productImg: string; productPrice: number; productCat: string; }
 
 const HeartIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -11,26 +14,38 @@ const HeartIcon = () => (
 );
 
 const Favorites = () => {
-  const [favorites, setFavorites] = useState<FavoriteProduct[]>(MOCK_FAVORITES);
+  const isAuthenticated = useAuthStore(s => s.isAuthenticated);
+  const { addItem } = useCartStore();
+  const [favorites, setFavorites] = useState<FavoriteDto[]>([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const remove = (id: number) => {
-    setFavorites((prev) => prev.filter((p) => p.id !== id));
+  useEffect(() => {
+    if (!isAuthenticated) { setLoading(false); return; }
+    api.get<FavoriteDto[]>('/favorites')
+      .then(setFavorites)
+      .catch(() => setFavorites([]))
+      .finally(() => setLoading(false));
+  }, [isAuthenticated]);
+
+  const remove = async (productId: number) => {
+    try {
+      await api.delete(`/favorites/${productId}`);
+      setFavorites(prev => prev.filter(f => f.productId !== productId));
+    } catch { /* ignore */ }
   };
+
+  if (loading) return <div className={styles.container}><h2 className={styles.title}>Избранное</h2><div className={styles.empty}><p>Загрузка…</p></div></div>;
 
   if (favorites.length === 0) {
     return (
       <div className={styles.container}>
         <h2 className={styles.title}>Избранное</h2>
         <div className={styles.empty}>
-          <div className={styles.emptyIcon}>
-            <HeartIcon />
-          </div>
+          <div className={styles.emptyIcon}><HeartIcon /></div>
           <p className={styles.emptyText}>Список избранного пуст</p>
           <p className={styles.emptyHint}>Добавляйте понравившиеся товары, нажимая на сердечко</p>
-          <button className={styles.catalogBtn} onClick={() => navigate('/shop')}>
-            Перейти в каталог
-          </button>
+          <button className={styles.catalogBtn} onClick={() => navigate('/shop')}>Перейти в каталог</button>
         </div>
       </div>
     );
@@ -40,28 +55,23 @@ const Favorites = () => {
     <div className={styles.container}>
       <h2 className={styles.title}>Избранное</h2>
       <p className={styles.count}>{favorites.length} товара</p>
-
       <div className={styles.grid}>
-        {favorites.map((product) => (
-          <div key={product.id} className={styles.card}>
+        {favorites.map((f) => (
+          <div key={f.id} className={styles.card}>
             <div className={styles.imageWrap}>
-              <img src={product.img} alt={product.name} className={styles.image} />
-              <button
-                className={styles.removeBtn}
-                onClick={() => remove(product.id)}
-                title="Убрать из избранного"
-              >
+              <img src={f.productImg} alt={f.productName} className={styles.image} />
+              <button className={styles.removeBtn} onClick={() => remove(f.productId)} title="Убрать из избранного">
                 <HeartIcon />
               </button>
             </div>
             <div className={styles.cardBody}>
-              <span className={styles.cat}>{product.cat}</span>
-              <span className={styles.name}>{product.name}</span>
+              <span className={styles.cat}>{f.productCat}</span>
+              <span className={styles.name}>{f.productName}</span>
               <div className={styles.cardFooter}>
-                <span className={styles.price}>
-                  {product.price.toLocaleString('ro-MD')} MDL
-                </span>
-                <button className={styles.addBtn}>В корзину</button>
+                <span className={styles.price}>{f.productPrice.toLocaleString('ro-MD')} MDL</span>
+                <button className={styles.addBtn} onClick={() => addItem({ id: f.productId, name: f.productName, price: f.productPrice, cat: f.productCat, img: f.productImg })}>
+                  В корзину
+                </button>
               </div>
             </div>
           </div>
