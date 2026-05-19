@@ -84,8 +84,12 @@ const Account = () => {
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/auth');
+    } else if (user?.role === 'ADMIN') {
+      navigate('/admin', { replace: true });
+    } else if (user?.role === 'PRIEST') {
+      navigate('/priest-cabinet', { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, user, navigate]);
 
   if (!user) return null;
 

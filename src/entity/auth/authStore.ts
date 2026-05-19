@@ -10,9 +10,7 @@ export interface User {
   email: string;
   phone: string;
   avatar?: string;
-  isAdmin?: boolean;
-  isFather?: boolean;
-  role?: UserRole;
+  role: UserRole;
 }
 
 interface AuthStore {
@@ -23,9 +21,9 @@ interface AuthStore {
   updateUser: (data: Partial<User>) => void;
 }
 
-function resolveRole(user: User): UserRole {
-  if (user.isFather) return 'PRIEST';
-  if (user.isAdmin) return 'ADMIN';
+export function roleFromNumber(n: number): UserRole {
+  if (n === 2) return 'ADMIN';
+  if (n === 1) return 'PRIEST';
   return 'USER';
 }
 
@@ -34,16 +32,12 @@ export const useAuthStore = create<AuthStore>()(
     (set) => ({
       user: null,
       isAuthenticated: false,
-      login: (user) => {
-        const role = resolveRole(user);
-        set({ user: { ...user, role }, isAuthenticated: true });
-      },
+      login: (user) => set({ user, isAuthenticated: true }),
       logout: () => set({ user: null, isAuthenticated: false }),
       updateUser: (data) =>
         set((state) => {
           if (!state.user) return { user: null };
-          const updated = { ...state.user, ...data };
-          return { user: { ...updated, role: resolveRole(updated) } };
+          return { user: { ...state.user, ...data } };
         }),
     }),
     { name: 'auth-storage' }

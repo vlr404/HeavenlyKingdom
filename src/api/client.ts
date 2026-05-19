@@ -10,6 +10,7 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     const body = await res.json().catch(() => ({}));
     throw Object.assign(new Error('API error'), { status: res.status, ...body });
   }
+  if (res.status === 204) return undefined as T;
   return res.json() as Promise<T>;
 }
 

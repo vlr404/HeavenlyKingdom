@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../entity/auth/authStore';
+import { useAuthStore, roleFromNumber } from '../entity/auth/authStore';
 import BackButton from '../components/common/BackButton/BackButton';
 import { api } from '../api/client';
 import styles from './Auth.module.scss';
@@ -14,8 +14,7 @@ interface UserResponseDto {
   email: string;
   phone: string;
   avatar: string;
-  isAdmin: boolean;
-  isFather: boolean;
+  role: number;
 }
 
 const Auth = () => {
@@ -47,6 +46,7 @@ const Auth = () => {
         email: loginForm.email,
         password: loginForm.password,
       });
+      const role = roleFromNumber(data.role);
       login({
         id: String(data.id),
         name: data.name,
@@ -54,13 +54,14 @@ const Auth = () => {
         email: data.email,
         phone: data.phone,
         avatar: data.avatar || undefined,
-        isAdmin: data.isAdmin,
-        isFather: data.isFather,
+        role,
       });
-      navigate(data.isAdmin ? '/admin' : data.isFather ? '/priest-cabinet' : '/account');
+      navigate(role === 'ADMIN' ? '/admin' : role === 'PRIEST' ? '/priest-cabinet' : '/account');
     } catch (err: unknown) {
       const e = err as { status?: number; message?: string };
-      setError(e.status === 401 ? 'Неверный email или пароль' : 'Ошибка сервера');
+      if (e.status === 401) setError('Неверный email или пароль');
+      else if (!e.status) setError('Нет связи с сервером');
+      else setError('Ошибка сервера');
     } finally {
       setLoading(false);
     }
@@ -80,7 +81,6 @@ const Auth = () => {
         lastName: '',
         email: registerForm.email,
         password: registerForm.password,
-        username: registerForm.email,
       });
       login({
         id: String(data.id),
@@ -88,13 +88,14 @@ const Auth = () => {
         lastName: data.lastName,
         email: data.email,
         phone: data.phone,
-        isAdmin: data.isAdmin,
-        isFather: data.isFather,
+        role: roleFromNumber(data.role),
       });
       navigate('/account');
     } catch (err: unknown) {
       const e = err as { status?: number };
-      setError(e.status === 409 ? 'Этот email уже занят' : 'Ошибка регистрации');
+      if (e.status === 409) setError('Этот email уже занят');
+      else if (!e.status) setError('Нет связи с сервером');
+      else setError('Ошибка регистрации');
     } finally {
       setLoading(false);
     }

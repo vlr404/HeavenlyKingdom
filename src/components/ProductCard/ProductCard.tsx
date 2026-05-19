@@ -4,6 +4,8 @@ import './ProductCard.css';
 import type { Product } from '../../types';
 import { useCartStore } from '../../entity/cart/cartStore';
 import { useFavoritesStore } from '../../entity/favorites/favoritesStore';
+import { useAuthStore } from '../../entity/auth/authStore';
+import { api } from '../../api/client';
 
 interface Props {
   product: Product;
@@ -13,6 +15,7 @@ const ProductCard = ({ product }: Props) => {
   const { name, price, cat, img, isNew } = product;
   const { addItem } = useCartStore();
   const { toggle, isFavorite } = useFavoritesStore();
+  const isAuthenticated = useAuthStore(s => s.isAuthenticated);
   const liked = isFavorite(product.id);
 
   const [added, setAdded] = useState(false);
@@ -23,6 +26,22 @@ const ProductCard = ({ product }: Props) => {
     setTimeout(() => setAdded(false), 1800);
   };
 
+  const handleToggleFavorite = async () => {
+    const wasLiked = isFavorite(product.id);
+    toggle(product);
+    if (isAuthenticated) {
+      try {
+        if (wasLiked) {
+          await api.delete(`/favorites/${product.id}`);
+        } else {
+          await api.post(`/favorites/${product.id}`, {});
+        }
+      } catch {
+        toggle(product);
+      }
+    }
+  };
+
   return (
     <div className="pc-card">
       <div className="pc-image-wrap">
@@ -30,7 +49,7 @@ const ProductCard = ({ product }: Props) => {
         <img src={img} alt={name} className="pc-image" />
         <button
           className={`pc-like${liked ? ' pc-like--active' : ''}`}
-          onClick={() => toggle(product)}
+          onClick={handleToggleFavorite}
           aria-label={liked ? 'Убрать из избранного' : 'В избранное'}
         >
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

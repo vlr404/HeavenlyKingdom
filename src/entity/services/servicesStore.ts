@@ -1,7 +1,5 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { FATHERS_DATA } from '../../data/fatherData';
-import { INITIAL_ORDERS } from '../../data/ordersData';
 
 export interface ServiceOrder {
   id: string;
@@ -27,29 +25,20 @@ export interface PriestData {
   schedule: { date: string; times: string[] }[];
 }
 
-const INITIAL_PRIESTS: PriestData[] = FATHERS_DATA.map((father) => ({
-  id: String(father.id),
-  name: father.name,
-  rank: father.rank,
-  img: father.img,
-  bio: father.bio,
-  schedule: father.schedule ?? [],
-}));
-
 interface ServicesStore {
   orders: ServiceOrder[];
   priests: PriestData[];
   addOrder: (order: Omit<ServiceOrder, 'id' | 'status' | 'createdAt'>) => void;
   updateOrderStatus: (id: string, status: 'accepted' | 'rejected') => void;
-  updatePriest: (id: string, data: Partial<PriestData>) => void;
+  setPriests: (priests: PriestData[]) => void;
   getBookedSlots: (priestId: string) => { date: string; time: string }[];
 }
 
 export const useServicesStore = create<ServicesStore>()(
   persist(
     (set, get) => ({
-      orders: INITIAL_ORDERS,
-      priests: INITIAL_PRIESTS,
+      orders: [],
+      priests: [],
       addOrder: (order) =>
         set((state) => ({
           orders: [
@@ -66,10 +55,7 @@ export const useServicesStore = create<ServicesStore>()(
         set((state) => ({
           orders: state.orders.map((o) => (o.id === id ? { ...o, status } : o)),
         })),
-      updatePriest: (id, data) =>
-        set((state) => ({
-          priests: state.priests.map((p) => (p.id === id ? { ...p, ...data } : p)),
-        })),
+      setPriests: (priests) => set({ priests }),
       getBookedSlots: (priestId) => {
         const { orders } = get();
         return orders
@@ -77,6 +63,6 @@ export const useServicesStore = create<ServicesStore>()(
           .map((o) => ({ date: o.date, time: o.time }));
       },
     }),
-    { name: 'services-storage-v3' }
+    { name: 'services-storage-v4' }
   )
 );

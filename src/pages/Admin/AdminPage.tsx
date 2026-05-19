@@ -16,7 +16,10 @@ import { HolidayManager } from './sections/HolidayManager';
 import { DonationWidget } from './sections/DonationWidget';
 import { StoreManager } from './sections/StoreManager';
 import { MediaManager } from './sections/MediaManager';
+import { UserManager } from './sections/UserManager';
+import { AdminProfile } from './sections/AdminProfile';
 import { useMedia } from '../../context/MediaContext';
+import { useAuthStore } from '../../entity/auth/authStore';
 
 const SECTIONS: AdminSection[] = [
   {
@@ -28,6 +31,18 @@ const SECTIONS: AdminSection[] = [
         <line x1="12" y1="20" x2="12" y2="4" />
         <line x1="6"  y1="20" x2="6"  y2="14" />
         <line x1="2"  y1="20" x2="22" y2="20" />
+      </svg>
+    ),
+  },
+  {
+    id: 'users',
+    label: 'Пользователи',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
       </svg>
     ),
   },
@@ -75,16 +90,6 @@ const SECTIONS: AdminSection[] = [
   },
 ];
 
-const initialHolidays = (): Holiday[] => {
-  const y = new Date().getFullYear();
-  return [
-    { id: 1, name: 'День Независимости', date: new Date(y, 7, 27) },
-    { id: 2, name: 'Рождество Христово', date: new Date(y, 11, 25) },
-    { id: 3, name: 'Новый год',          date: new Date(y + 1, 0, 1) },
-    { id: 4, name: 'Пасха',              date: new Date(y, 3, 20) },
-  ];
-};
-
 const initialProducts = (): AdminProduct[] =>
   SHOP_PRODUCTS.map((p) => ({ ...p, onSale: false }));
 
@@ -97,18 +102,38 @@ const initialGoal: DonationGoal = {
   current: 25000,
 };
 
+const PROFILE_SECTION: AdminSection = {
+  id: 'adminProfile',
+  label: 'Профиль',
+  icon: (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  ),
+};
+
 const AdminPage = () => {
   const [active, setActive] = useState<AdminSectionId>('stats');
-  const [holidays, setHolidays] = useState<Holiday[]>(initialHolidays);
+  const { logout } = useAuthStore();
+  const [holidays, setHolidays] = useState<Holiday[]>([]);
   const [products, setProducts] = useState<AdminProduct[]>(initialProducts);
   const [categories, setCategories] = useState<string[]>(initialCategories);
+  const [goal, setGoal] = useState<DonationGoal>(initialGoal);
 
   useEffect(() => {
     api.get<(AdminProduct & { isOnSale?: boolean })[]>('/product')
       .then(data => setProducts(data.map(p => ({ ...p, onSale: p.isOnSale ?? p.onSale ?? false }))))
-      .catch(() => { /* keep static fallback */ });
+      .catch(() => {});
+
+    api.get<{ id: number; name: string; date: string }[]>('/admin/holidays')
+      .then(data => setHolidays(data.map(h => ({ ...h, date: new Date(h.date) }))))
+      .catch(() => {});
+
+    api.get<DonationGoal>('/admin/donations')
+      .then(setGoal)
+      .catch(() => {});
   }, []);
-  const [goal, setGoal] = useState<DonationGoal>(initialGoal);
 
   const { ceremonyItems, setCeremonyItems, musicTracks, setMusicTracks, videoUrls, setVideoUrls } = useMedia();
 
@@ -122,15 +147,21 @@ const AdminPage = () => {
     };
   }, [products, holidays, goal]);
 
-  const addHoliday = (name: string, date: Date) => {
-    setHolidays((prev) => [
-      ...prev,
-      { id: Date.now(), name, date },
-    ]);
+  const addHoliday = async (name: string, date: Date) => {
+    try {
+      const created = await api.post<{ id: number; name: string; date: string }>(
+        '/admin/holidays',
+        { name, date: date.toISOString() },
+      );
+      setHolidays(prev => [...prev, { ...created, date: new Date(created.date) }]);
+    } catch {
+      setHolidays(prev => [...prev, { id: Date.now(), name, date }]);
+    }
   };
 
-  const removeHoliday = (id: number) => {
-    setHolidays((prev) => prev.filter((h) => h.id !== id));
+  const removeHoliday = async (id: number) => {
+    setHolidays(prev => prev.filter(h => h.id !== id));
+    try { await api.delete(`/admin/holidays/${id}`); } catch { /* ignore */ }
   };
 
   const toggleSale = (id: number, onSale: boolean) => {
@@ -157,15 +188,35 @@ const AdminPage = () => {
     setCategories((prev) => prev.filter((c) => c !== name));
   };
 
-  const updateGoal = (patch: Partial<Omit<DonationGoal, 'id'>>) => {
-    setGoal((prev) => ({ ...prev, ...patch }));
+  const updateGoal = async (patch: Partial<Omit<DonationGoal, 'id'>>) => {
+    try {
+      const updated = await api.put<DonationGoal>('/admin/donations', {
+        title: patch.title ?? goal.title,
+        target: patch.target ?? goal.target,
+      });
+      setGoal(updated);
+    } catch {
+      setGoal(prev => ({ ...prev, ...patch }));
+    }
   };
 
-  const addProgress = (amount: number) => {
-    setGoal((prev) => ({ ...prev, current: Math.max(0, prev.current + amount) }));
+  const addProgress = async (amount: number) => {
+    try {
+      const updated = await api.post<DonationGoal>('/admin/donations/progress', { amount });
+      setGoal(updated);
+    } catch {
+      setGoal(prev => ({ ...prev, current: Math.max(0, prev.current + amount) }));
+    }
   };
 
-  const resetProgress = () => setGoal((prev) => ({ ...prev, current: 0 }));
+  const resetProgress = async () => {
+    try {
+      const updated = await api.post<DonationGoal>('/admin/donations/reset', {});
+      setGoal(updated);
+    } catch {
+      setGoal(prev => ({ ...prev, current: 0 }));
+    }
+  };
 
   const updateCeremony = (id: string, patch: Partial<CeremonyItem>) => {
     setCeremonyItems(prev => prev.map(item => item.id === id ? { ...item, ...patch } : item));
@@ -204,18 +255,44 @@ const AdminPage = () => {
             </button>
           ))}
         </nav>
+        <div style={{ marginTop: 'auto', borderTop: '1px solid var(--admin-border)', paddingTop: 8 }}>
+          <button
+            type="button"
+            className={`admin__nav-item ${active === 'adminProfile' ? 'is-active' : ''}`}
+            onClick={() => setActive('adminProfile')}
+          >
+            <span className="admin__nav-icon">{PROFILE_SECTION.icon}</span>
+            {PROFILE_SECTION.label}
+          </button>
+          <button
+            type="button"
+            className="admin__nav-item"
+            style={{ color: 'var(--admin-danger)' }}
+            onClick={logout}
+          >
+            <span className="admin__nav-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+            </span>
+            Выйти
+          </button>
+        </div>
       </aside>
 
       <main className="admin__content">
-        {active === 'stats' && <StatsPanel stats={stats} />}
-        {active === 'holidays' && (
+        {active === 'stats'        && <StatsPanel stats={stats} />}
+        {active === 'users'        && <UserManager />}
+        {active === 'holidays'     && (
           <HolidayManager
             holidays={holidays}
             onAdd={addHoliday}
             onRemove={removeHoliday}
           />
         )}
-        {active === 'donations' && (
+        {active === 'donations'    && (
           <DonationWidget
             goal={goal}
             onUpdateGoal={updateGoal}
@@ -223,7 +300,7 @@ const AdminPage = () => {
             onReset={resetProgress}
           />
         )}
-        {active === 'store' && (
+        {active === 'store'        && (
           <StoreManager
             products={products}
             categories={categories}
@@ -233,7 +310,7 @@ const AdminPage = () => {
             onRemoveCategory={removeCategory}
           />
         )}
-        {active === 'media' && (
+        {active === 'media'        && (
           <MediaManager
             ceremonyItems={ceremonyItems}
             musicTracks={musicTracks}
@@ -245,6 +322,7 @@ const AdminPage = () => {
             onRemoveVideo={removeVideo}
           />
         )}
+        {active === 'adminProfile' && <AdminProfile />}
       </main>
     </div>
   );

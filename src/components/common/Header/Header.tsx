@@ -58,15 +58,21 @@ const IconsCluster = ({ showCart = true }: { showCart?: boolean }) => {
   const items    = useCartStore((s) => s.items);
   const { user, isAuthenticated } = useAuthStore();
   const count    = items.reduce((s, i) => s + i.qty, 0);
+  const isAdmin  = user?.role === 'ADMIN';
+  const isPriest = user?.role === 'PRIEST';
+
+  const profilePath = isAuthenticated
+    ? isAdmin ? '/admin' : isPriest ? '/priest-cabinet' : '/account'
+    : '/auth';
 
   return (
     <div className={styles.icons}>
       <Avatar
         user={user}
         isAuthenticated={isAuthenticated}
-        onClick={() => navigate(isAuthenticated ? '/account' : '/auth')}
+        onClick={() => navigate(profilePath)}
       />
-      {showCart && (
+      {showCart && !isAdmin && !isPriest && (
         <button
           className={styles.cartBtn}
           onClick={() => navigate('/cart')}
@@ -95,6 +101,9 @@ export const Header = () => {
   const location = useLocation();
   const mode     = getMode(location.pathname);
   const { setResults } = useSearch();
+  const { user } = useAuthStore();
+  const isAdmin  = user?.role === 'ADMIN';
+  const isPriest = user?.role === 'PRIEST';
 
   return (
     <header className={styles.header}>
@@ -112,7 +121,12 @@ export const Header = () => {
                 <li><a href="#events"   className={styles.navItem}>СОБЫТИЯ</a></li>
                 <li><a href="#ceremony" className={styles.navItem}>ЦЕРЕМОНИИ</a></li>
                 <li><a href="#contacts" className={styles.navItem}>КОНТАКТЫ</a></li>
-                <li><Link to="/shop"    className={styles.navItem}>МАГАЗИН</Link></li>
+                {isAdmin
+                  ? <li><Link to="/admin"          className={styles.navItem}>АДМИН-ПАНЕЛЬ</Link></li>
+                  : isPriest
+                  ? <li><Link to="/priest-cabinet" className={styles.navItem}>МОЙ КАБИНЕТ</Link></li>
+                  : <li><Link to="/shop"           className={styles.navItem}>МАГАЗИН</Link></li>
+                }
               </ul>
             </nav>
             <IconsCluster showCart={false} />
@@ -141,13 +155,23 @@ export const Header = () => {
                 </svg>
                 Главная
               </Link>
-              <span className={styles.breadSep}>›</span>
-              <Link to="/shop" className={styles.breadLink}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
-                </svg>
-                Магазин
-              </Link>
+              {!isAdmin && !isPriest && (
+                <>
+                  <span className={styles.breadSep}>›</span>
+                  <Link to="/shop" className={styles.breadLink}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
+                    </svg>
+                    Магазин
+                  </Link>
+                </>
+              )}
+              {location.pathname.startsWith('/admin') && (
+                <>
+                  <span className={styles.breadSep}>›</span>
+                  <span className={styles.breadCurrent}>Админ-панель</span>
+                </>
+              )}
               {location.pathname.startsWith('/account') && (
                 <>
                   <span className={styles.breadSep}>›</span>

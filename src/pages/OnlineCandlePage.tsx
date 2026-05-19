@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './OnlineCandlePage.css';
 import { CandleShop } from '../components/Candles/CandleShop';
 import { CandleStand } from '../components/Candles/CandleStand';
+import { api } from '../api/client';
+import { useAuthStore } from '../entity/auth/authStore';
 
 export type CandleType = 'simple' | 'large' | 'festive';
 
@@ -30,22 +33,108 @@ export interface PlacedCandle {
   placedAt: number;
 }
 
+interface ChapelCandleDto {
+  id: number;
+  type: string;
+  slotIndex: number;
+  note: string;
+  intention: string;
+  placedAt: string;
+  expiresAt: string;
+}
+
 export type Inventory = Record<CandleType, number>;
 
 interface PendingDrop { type: CandleType; slotIndex: number }
 
-// Replace with a church choir audio file URL
 const AMBIENT_SRC = 'https://archive.org/download/pachebelcanon/pachebelcanon.mp3';
+const GIFT_INVENTORY: Inventory = { simple: 1, large: 1, festive: 1 };
+
+function inventoryKey(userId: string) {
+  return `candle-inv-${userId}`;
+}
+
+function loadInventory(userId: string): Inventory {
+  try {
+    const raw = localStorage.getItem(inventoryKey(userId));
+    if (raw) return JSON.parse(raw) as Inventory;
+  } catch { /* ignore */ }
+  return { ...GIFT_INVENTORY };
+}
+
+function dtoToPlaced(dto: ChapelCandleDto): PlacedCandle {
+  return {
+    id: String(dto.id),
+    type: dto.type as CandleType,
+    slotIndex: dto.slotIndex,
+    note: dto.note,
+    intention: dto.intention as 'health' | 'peace',
+    placedAt: new Date(dto.placedAt).getTime(),
+  };
+}
+
+/* ── Gate shown to non-authenticated users ── */
+function AuthGate() {
+  const navigate = useNavigate();
+  return (
+    <div className="cp">
+      <div className="cp__bg" />
+      <header className="cp__header">
+        <p className="cp__eyebrow">Онлайн часовня</p>
+        <h1 className="cp__title">Поставить свечу</h1>
+      </header>
+      <div style={{ textAlign: 'center', marginTop: 48, color: '#c9a96e' }}>
+        <div style={{ fontSize: 48, marginBottom: 16 }}>🕯️</div>
+        <p style={{ fontSize: 18, marginBottom: 8 }}>Войдите в аккаунт, чтобы ставить свечи</p>
+        <p style={{ fontSize: 14, opacity: 0.7, marginBottom: 24 }}>
+          Каждый новый пользователь получает по одной свече каждого вида в подарок
+        </p>
+        <button
+          onClick={() => navigate('/auth')}
+          style={{
+            background: '#c9a96e', color: '#1a1008', border: 'none',
+            padding: '12px 32px', borderRadius: 6, fontSize: 15,
+            fontFamily: 'Arsenal, serif', cursor: 'pointer',
+          }}
+        >
+          Войти или зарегистрироваться
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function OnlineCandlePage() {
-  const [inventory, setInventory] = useState<Inventory>({ simple: 0, large: 0, festive: 0 });
+  const { isAuthenticated, user } = useAuthStore(s => ({
+    isAuthenticated: s.isAuthenticated,
+    user: s.user,
+  }));
+
+  const [inventory, setInventory] = useState<Inventory>(() =>
+    user?.id ? loadInventory(user.id) : { simple: 0, large: 0, festive: 0 }
+  );
   const [placed,    setPlaced]    = useState<PlacedCandle[]>([]);
   const [pending,   setPending]   = useState<PendingDrop | null>(null);
   const [noteText,  setNoteText]  = useState('');
   const [intention, setIntention] = useState<'health' | 'peace'>('health');
   const [isAmbient, setIsAmbient] = useState(false);
-  const audioRef    = useRef<HTMLAudioElement | null>(null);
-  const inputRef    = useRef<HTMLInputElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  /* Persist inventory to localStorage whenever it changes */
+  useEffect(() => {
+    if (user?.id) {
+      localStorage.setItem(inventoryKey(user.id), JSON.stringify(inventory));
+    }
+  }, [inventory, user?.id]);
+
+  /* Load existing chapel candles from backend */
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    api.get<ChapelCandleDto[]>('/chapel/candles')
+      .then(data => setPlaced(data.map(dtoToPlaced)))
+      .catch(() => {});
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const a = new Audio(AMBIENT_SRC);
@@ -65,6 +154,8 @@ export default function OnlineCandlePage() {
     if (pending) setTimeout(() => inputRef.current?.focus(), 60);
   }, [pending]);
 
+  if (!isAuthenticated) return <AuthGate />;
+
   const handleBuy = (type: CandleType) =>
     setInventory(p => ({ ...p, [type]: p[type] + 1 }));
 
@@ -77,16 +168,27 @@ export default function OnlineCandlePage() {
     setIntention('health');
   };
 
-  const confirmNote = () => {
+  const confirmNote = async () => {
     if (!pending) return;
-    setPlaced(p => [...p, {
-      id: `c-${Date.now()}`,
-      type: pending.type,
-      slotIndex: pending.slotIndex,
-      note: noteText.trim(),
-      intention,
-      placedAt: Date.now(),
-    }]);
+    try {
+      const dto = await api.post<ChapelCandleDto>('/chapel/place', {
+        type: pending.type,
+        slotIndex: pending.slotIndex,
+        note: noteText.trim(),
+        intention,
+      });
+      setPlaced(p => [...p, dtoToPlaced(dto)]);
+    } catch {
+      /* fallback: show locally if API fails */
+      setPlaced(p => [...p, {
+        id: `local-${Date.now()}`,
+        type: pending.type,
+        slotIndex: pending.slotIndex,
+        note: noteText.trim(),
+        intention,
+        placedAt: Date.now(),
+      }]);
+    }
     setPending(null);
   };
 
@@ -96,14 +198,18 @@ export default function OnlineCandlePage() {
     setPending(null);
   };
 
-  const removeCandle = (id: string) =>
+  const removeCandle = async (id: string) => {
     setPlaced(p => p.filter(c => c.id !== id));
+    const numericId = parseInt(id);
+    if (!isNaN(numericId)) {
+      try { await api.delete(`/chapel/candles/${numericId}`); } catch { /* ignore */ }
+    }
+  };
 
   return (
     <div className="cp">
       <div className="cp__bg" />
 
-      {/* ── UX#2: Ambient choir toggle ── */}
       <button
         className={`cp__ambient ${isAmbient ? 'cp__ambient--on' : ''}`}
         onClick={() => setIsAmbient(v => !v)}
@@ -130,7 +236,6 @@ export default function OnlineCandlePage() {
         </aside>
       </div>
 
-      {/* ── UX#1: Prayer note modal ── */}
       {pending && (
         <div className="cp__overlay" onClick={cancelNote}>
           <div className="cp__modal" onClick={e => e.stopPropagation()}>
@@ -151,7 +256,6 @@ export default function OnlineCandlePage() {
 
             <h2 className="cp__modal-title">Записка к свече</h2>
 
-            {/* ── UX#1: Intention tabs ── */}
             <div className="cp__modal-tabs">
               <button className={intention === 'health' ? 'active' : ''} onClick={() => setIntention('health')}>
                 За здравие

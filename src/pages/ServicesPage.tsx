@@ -3,9 +3,51 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useServicesStore, type PriestData } from '../entity/services/servicesStore';
 import { useAuthStore } from '../entity/auth/authStore';
 import { SubNavBar } from '../components/common/SubNavBar/SubNavBar';
+import { api } from '../api/client';
 import styles from './ServicesPage.module.scss';
 
 import { SERVICES, type ServiceItem } from '../data/servicesData';
+
+interface FatherDto {
+  id: number;
+  name: string;
+  lastName: string;
+  san: string;
+  img: string;
+  bio?: string;
+  instagram?: string;
+  telegram?: string;
+  youtube?: string;
+  facebook?: string;
+  gmail?: string;
+}
+
+function generateSchedule(): { date: string; times: string[] }[] {
+  const result: { date: string; times: string[] }[] = [];
+  const today = new Date();
+  for (let i = 1; i <= 21; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    if (d.getDay() !== 0) {
+      result.push({
+        date: d.toISOString().split('T')[0],
+        times: ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00'],
+      });
+    }
+  }
+  return result;
+}
+
+function fatherToPreist(f: FatherDto): PriestData {
+  return {
+    id: String(f.id),
+    name: `${f.name}${f.lastName ? ' ' + f.lastName : ''}`,
+    rank: f.san || 'Священнослужитель',
+    img: f.img || '',
+    bio: f.bio || '',
+    schedule: generateSchedule(),
+  };
+}
 
 /* ── Booking step type ──────────────────── */
 type BookingStep = 1 | 2 | 3 | 4;
@@ -397,10 +439,18 @@ const ServiceCard = ({
 
 /* ── Main page ──────────────────────────── */
 export default function ServicesPage() {
-  const { priests, getBookedSlots, addOrder } = useServicesStore();
+  const { priests, getBookedSlots, addOrder, setPriests } = useServicesStore();
   const user = useAuthStore((s) => s.user);
 
   const [activeService, setActiveService] = useState<ServiceItem | null>(null);
+
+  useEffect(() => {
+    api.get<FatherDto[]>('/father')
+      .then((data) => {
+        if (data.length > 0) setPriests(data.map(fatherToPreist));
+      })
+      .catch(() => {});
+  }, [setPriests]);
 
   /* Lock body scroll when modal is open */
   useEffect(() => {

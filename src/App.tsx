@@ -17,7 +17,7 @@ import { useAuthStore } from './entity/auth/authStore'
 
 const AdminGuard = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, user } = useAuthStore();
-  if (!isAuthenticated || !user?.isAdmin) return <Navigate to="/auth" replace />;
+  if (!isAuthenticated || user?.role !== 'ADMIN') return <Navigate to="/auth" replace />;
   return <>{children}</>;
 };
 

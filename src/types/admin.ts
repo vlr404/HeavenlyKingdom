@@ -2,7 +2,7 @@ import type { ReactElement } from 'react';
 import type { Holiday } from './holiday';
 import type { Product } from './index';
 
-export type AdminSectionId = 'stats' | 'holidays' | 'donations' | 'store' | 'media';
+export type AdminSectionId = 'stats' | 'users' | 'holidays' | 'donations' | 'store' | 'media' | 'adminProfile';
 
 export interface AdminSection {
   id: AdminSectionId;

@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './IndulgencePage.css';
+import { api } from '../api/client';
 
 /* ── Types ─────────────────────────────────────────────── */
 import { SINS, type SinType, type SinDef } from '../data/sinsData';
@@ -85,14 +86,21 @@ export default function IndulgencePage() {
     setState(p => ({ ...p, selected: sin, redeemed: false }));
   }, []);
 
-  const handleRedeem = useCallback(() => {
-    if (!state.selected) return;
+  const handleRedeem = useCallback(async () => {
+    if (!state.selected || !selectedDef) return;
     setShimmer(true);
     setTimeout(() => setShimmer(false), 650);
+    try {
+      await api.post('/indulgences', {
+        sin: selectedDef.name,
+        gravity: state.gravity,
+        price: finalPrice,
+      });
+    } catch { /* guest users or network error — proceed anyway */ }
     setHoly(true);
     setTimeout(() => setHoly(false), 1500);
     setState(p => ({ ...p, redeemed: true }));
-  }, [state.selected]);
+  }, [state.selected, state.gravity, selectedDef, finalPrice]);
 
   const handleReset = useCallback(() => {
     setState(p => ({ ...p, selected: null, redeemed: false }));
